@@ -1,6 +1,6 @@
 {
   "name": "SIGNAL/90",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "summary": "Cassette-futurism UI system: emissive type on a dead-black CRT, flat axis-aligned screens, stretched Helvetica, boxed labels, engineered ornament (frames, wires, cell chains), walls of text, and state changes that snap on the 12 fps anime-frame grid. Alarms strobe at 12 Hz with a dim afterimage.",
   "files": {
     "css": "signal90/signal90.css",
@@ -23,7 +23,6 @@
     "svg_defs_required_for_glow": "<svg width=\"0\" height=\"0\" style=\"position:absolute\"><filter id=\"sglow\" x=\"-3%\" y=\"-3%\" width=\"106%\" height=\"106%\"><feGaussianBlur stdDeviation=\"2.6\" result=\"b\"/><feMerge><feMergeNode in=\"b\"/><feMergeNode in=\"SourceGraphic\"/></feMerge></filter></svg>",
     "screen_container": "A screen is a 16:9 box with `container-type:inline-size`; size everything inside it in cqw. For SVG screens use viewBox 0 0 1600 900 (1cqw = 16 units)."
   },
-
   "principles": [
     "It is a computer screen, not a film: flat, axis-aligned, no camera.",
     "Light on black: colours are emissive and carry meaning.",
@@ -32,33 +31,118 @@
     "Density is texture: walls of repeated words or dump text sit behind one hero.",
     "Nothing eases: state jumps on the anime-frame grid; alarms strobe."
   ],
-
   "rules": {
     "must": [
-      { "id": "M01", "rule": "Background is --void (#050404) or a full-field signal colour (alarm red, document blue, paper). Never white UI chrome.", "check": "body/screen background resolves to a token" },
-      { "id": "M02", "rule": "All Latin UI text is font-family var(--f-helv), weight 700, UPPERCASE, and stretched via .tall/.cond/.hx/.wide (or svgT sx in SVG).", "check": "no other sans family; text-transform uppercase" },
-      { "id": "M03", "rule": "Call stretchAll(root) after inserting any .tall/.cond/.hx/.wide/.tag elements, and again after document.fonts.ready and on resize.", "check": "no visible gaps after stretched words" },
-      { "id": "M04", "rule": "Every label lives in a .tag (hairline box) or a .chain cell (key over value). Free-floating small caps text is rare.", "check": "labels have a border" },
-      { "id": "M05", "rule": "Numbers that tick (timers, KPIs, temperatures, prices) are 7-segment: seg7() in HTML or seg() in SVG.", "check": "no counters in a text font" },
-      { "id": "M06", "rule": "All animation is quantised: use setInterval/ctx.every at AF (83.333 ms) or FR, CSS steps(), or the provided classes. Big jumps per tick (e.g. +16% per meter step).", "check": "no ease/ease-in-out/cubic-bezier, no transition on layout props" },
-      { "id": "M07", "rule": "Strobe (.strobe/.strobe-in/.strobe-inv) is reserved for critical states: fault, deny, breach, danger, outage, conflict, lockout. Use .blink for non-critical status (LIVE, REC, ANALYZING, RUNNING).", "check": "strobe only on red/critical elements" },
-      { "id": "M08", "rule": "Max three signal hues per screen. Red = fault, mint = ok, amber = data, sky = secondary, phosphor = traces.", "check": "count distinct token hues" },
-      { "id": "M09", "rule": "Add ornament: at least one of chamfer frame, .brk corner brackets, label tab on a rail, wires with dot terminals, leader lines, dashed bays, rulers, crosshair lattice.", "check": "screen has ≥1 ornament primitive" },
-      { "id": "M10", "rule": "Give dense screens a texture layer: .wall (repeated word, low contrast) or .dump (hex/log/binary) behind or beside the hero.", "check": "optional per screen, required for hero/alarm screens" },
-      { "id": "M11", "rule": "Respect prefers-reduced-motion (the kit disables strobe/blink) and keep a user-facing strobe toggle (body.nostrobe).", "check": "toggle exists" }
+      {
+        "id": "M01",
+        "rule": "Background is --void (#050404) or a full-field signal colour (alarm red, document blue, paper). Never white UI chrome.",
+        "check": "body/screen background resolves to a token"
+      },
+      {
+        "id": "M02",
+        "rule": "All Latin UI text is font-family var(--f-helv), weight 700, UPPERCASE, and stretched via .tall/.cond/.hx/.wide (or svgT sx in SVG).",
+        "check": "no other sans family; text-transform uppercase"
+      },
+      {
+        "id": "M03",
+        "rule": "Call stretchAll(root) after inserting any .tall/.cond/.hx/.wide/.tag elements, and again after document.fonts.ready and on resize.",
+        "check": "no visible gaps after stretched words"
+      },
+      {
+        "id": "M04",
+        "rule": "Every label lives in a .tag (hairline box) or a .chain cell (key over value). Free-floating small caps text is rare.",
+        "check": "labels have a border"
+      },
+      {
+        "id": "M05",
+        "rule": "Numbers that tick (timers, KPIs, temperatures, prices) are 7-segment: seg7() in HTML or seg() in SVG.",
+        "check": "no counters in a text font"
+      },
+      {
+        "id": "M06",
+        "rule": "All animation is quantised: use setInterval/ctx.every at AF (83.333 ms) or FR, CSS steps(), or the provided classes. Big jumps per tick (e.g. +16% per meter step).",
+        "check": "no ease/ease-in-out/cubic-bezier, no transition on layout props"
+      },
+      {
+        "id": "M07",
+        "rule": "Strobe (.strobe/.strobe-in/.strobe-inv) is reserved for critical states: fault, deny, breach, danger, outage, conflict, lockout. Use .blink for non-critical status (LIVE, REC, ANALYZING, RUNNING).",
+        "check": "strobe only on red/critical elements"
+      },
+      {
+        "id": "M08",
+        "rule": "Max three signal hues per screen. Red = fault, mint = ok, amber = data, sky = secondary, phosphor = traces.",
+        "check": "count distinct token hues"
+      },
+      {
+        "id": "M09",
+        "rule": "Add ornament: at least one of chamfer frame, .brk corner brackets, label tab on a rail, wires with dot terminals, leader lines, dashed bays, rulers, crosshair lattice.",
+        "check": "screen has ≥1 ornament primitive"
+      },
+      {
+        "id": "M10",
+        "rule": "Give dense screens a texture layer: .wall (repeated word, low contrast) or .dump (hex/log/binary) behind or beside the hero.",
+        "check": "optional per screen, required for hero/alarm screens"
+      },
+      {
+        "id": "M11",
+        "rule": "Respect prefers-reduced-motion (the kit disables strobe/blink) and keep a user-facing strobe toggle (body.nostrobe).",
+        "check": "toggle exists"
+      },
+      {
+        "id": "M12",
+        "rule": "Compose asymmetrically. Heroes sit off-centre or bleed off an edge; frames have one cut corner, an open side or a tab, not four matching corners.",
+        "check": "no screen is a centred box on a centred backdrop"
+      },
+      {
+        "id": "M13",
+        "rule": "Overlap is allowed only against asymmetric framing: let digits or hero words run out past an open frame side or across a band, never just past a closed symmetric box (that reads as a bug).",
+        "check": "every overlap crosses an open edge or a band"
+      },
+      {
+        "id": "M14",
+        "rule": "Use oblique (.obl / svgT sk=-12 / seg sk=-8 / .obl-seg) on 1–2 accents per screen: hero words, warnings, a value in a chain. Never on body data or mono.",
+        "check": "oblique present but sparse"
+      }
     ],
     "never": [
-      { "id": "N01", "rule": "No perspective, rotateX/Y, tilted screens, parallax, or camera push/zoom on the UI. (Diamond cells rotated 45° are glyphs, not tilt.)" },
-      { "id": "N02", "rule": "No easing curves, fades, slides, springs or dissolves. Transitions between screens are hard cuts." },
-      { "id": "N03", "rule": "No rounded corners, drop-shadow cards, glassmorphism, gradients-as-decoration, or emoji/icon fonts. Cut corners (chamfer) instead of rounding." },
-      { "id": "N04", "rule": "No condensed/extended font cuts or other display faces; stretch Helvetica instead." },
-      { "id": "N05", "rule": "No strobing of full-screen fields or of non-critical info. No strobe on mint/amber nominal states." },
-      { "id": "N06", "rule": "No pure #000 or #fff fields (except --paper inverse screens and white crosshair marks on live feeds)." },
-      { "id": "N07", "rule": "No hazard yellow text; hazard only in stripe pairs." },
-      { "id": "N08", "rule": "No real brands, logos, show names or characters from reference material; all copy is original." }
+      {
+        "id": "N01",
+        "rule": "No perspective, rotateX/Y, tilted screens, parallax, or camera push/zoom on the UI. (Diamond cells rotated 45° are glyphs, not tilt.)"
+      },
+      {
+        "id": "N02",
+        "rule": "No easing curves, fades, slides, springs or dissolves. Transitions between screens are hard cuts."
+      },
+      {
+        "id": "N03",
+        "rule": "No rounded corners, drop-shadow cards, glassmorphism, gradients-as-decoration, or emoji/icon fonts. Cut corners (chamfer) instead of rounding."
+      },
+      {
+        "id": "N04",
+        "rule": "No condensed/extended font cuts or other display faces; stretch Helvetica instead."
+      },
+      {
+        "id": "N05",
+        "rule": "No strobing of full-screen fields or of non-critical info. No strobe on mint/amber nominal states."
+      },
+      {
+        "id": "N06",
+        "rule": "No pure #000 or #fff fields (except --paper inverse screens and white crosshair marks on live feeds)."
+      },
+      {
+        "id": "N07",
+        "rule": "No hazard yellow text; hazard only in stripe pairs."
+      },
+      {
+        "id": "N08",
+        "rule": "No real brands, logos, show names or characters from reference material; all copy is original."
+      },
+      {
+        "id": "N09",
+        "rule": "No modal dialogs: no centred panel with a dimmed or patterned backdrop, no OK/Cancel. Verdicts are full-width bands or corner tags."
+      }
     ]
   },
-
   "color": {
     "tokens": "signal90/tokens.json#color",
     "semantics": {
@@ -73,62 +157,297 @@
     "led_meter_ramp": "cells light bottom→top: phosphor, then amber above ~60%, red above ~85%; unlit cells use dim-green/dim-amber/dim-red",
     "spectrum": "only for channel gauges and header wedges"
   },
-
   "typography": {
     "roles": [
-      { "role": "shout", "class": ".tall", "stretch": 0.56, "size": "8–30cqw", "use": "One hero word or number; may bleed off the frame." },
-      { "role": "heading", "class": ".cond", "stretch": 0.74, "size": "2–5cqw", "use": "Panel names, chain values, sub-heads." },
-      { "role": "label", "class": ".tag (auto-wraps contents in .hx)", "stretch": 0.84, "size": "1.2–3cqw", "use": "Corner tags, statuses, buttons." },
-      { "role": "warning", "class": ".wide", "stretch": 1.18, "size": "10–20cqw", "use": "DANGER / REFUSED / KEEP OUT." },
-      { "role": "data", "class": ".mono", "font": "--f-mono", "size": "0.8–2cqw", "use": "Logs, tables, dumps, timecodes, small numbers." },
-      { "role": "stamp", "class": ".mincho", "font": "--f-mincho 800", "use": "Kanji stamps (承認 approve, 否定 deny, 危険 danger, 非常事態 emergency, 審議中 deliberating), usually boxed." },
-      { "role": "numerals", "api": "seg7(str) | seg(x,y,h,str,col)", "use": "Ticking values. Digits, ':' and '.' supported; ghost segments at 8%." }
+      {
+        "role": "shout",
+        "class": ".tall",
+        "stretch": 0.56,
+        "size": "8–30cqw",
+        "use": "One hero word or number; may bleed off the frame."
+      },
+      {
+        "role": "heading",
+        "class": ".cond",
+        "stretch": 0.74,
+        "size": "2–5cqw",
+        "use": "Panel names, chain values, sub-heads."
+      },
+      {
+        "role": "label",
+        "class": ".tag (auto-wraps contents in .hx)",
+        "stretch": 0.84,
+        "size": "1.2–3cqw",
+        "use": "Corner tags, statuses, buttons."
+      },
+      {
+        "role": "warning",
+        "class": ".wide",
+        "stretch": 1.18,
+        "size": "10–20cqw",
+        "use": "DANGER / REFUSED / KEEP OUT."
+      },
+      {
+        "role": "data",
+        "class": ".mono",
+        "font": "--f-mono",
+        "size": "0.8–2cqw",
+        "use": "Logs, tables, dumps, timecodes, small numbers."
+      },
+      {
+        "role": "stamp",
+        "class": ".mincho",
+        "font": "--f-mincho 800",
+        "use": "Kanji stamps (承認 approve, 否定 deny, 危険 danger, 非常事態 emergency, 審議中 deliberating), usually boxed."
+      },
+      {
+        "role": "numerals",
+        "api": "seg7(str) | seg(x,y,h,str,col)",
+        "use": "Ticking values. Digits, ':' and '.' supported; ghost segments at 8%."
+      },
+      {
+        "role": "oblique",
+        "class": ".obl (with .tall/.cond/.wide/.hx), .obl-seg for seg7",
+        "svg": "svgT(...,sx,-12) / seg(...,ghost,-8)",
+        "skew": "-12deg (token --skew)",
+        "use": "Accents: hero words, warnings, a highlighted value. Phototype slanted on the stat camera."
+      }
     ],
     "data_attr": "data-o=\"c\" or \"r\" on .tall/.cond/.wide/.hx sets the stretch origin (centre/right) for centred or right-aligned text.",
     "svg": "svgT(x,y,str,size,fill,anchor,sx) draws stretched Helvetica in SVG; pass sx 0.56/0.74/0.84."
   },
-
   "components": [
-    { "name": "Tag", "html": "<span class=\"tag\" style=\"color:var(--amber)\">Object: 15</span>", "variants": [".dbl (double rule)", ".solid (filled, ink on void)"], "svg": "tagS(x,y,str,size,col,{solid,anchor,cls,bg})", "use": "Every label." },
-    { "name": "Cell chain", "html": "<div class=\"chain\" style=\"color:var(--amber);font-size:2.4cqw\"><div class=\"cell\"><small class=\"hx\">Key</small><span class=\"cond\">VALUE</span></div>…</div>", "svg": "chainS(x,y,[[key,value,width,id?],…],col,h)", "use": "Metadata rows, KPIs, manifests. Cells butt together sharing borders." },
-    { "name": "7-segment readout", "html": "el.innerHTML = seg7('04:59:99')", "svg": "seg(x,y,height,'48213',col)", "use": "Timers, counters, KPIs." },
-    { "name": "Chamfer frame", "svg": "chamfer(x,y,w,h,cut,col,strokeWidth,fill) — often doubled: outer 3–4px + inner 1–1.5px inset 14–18", "use": "Panels, tiles, hero frames." },
-    { "name": "Label tab on rail", "svg": "tab(x,y,'TITLE',col,size) placed on a frame's top edge", "use": "Titling a frame." },
-    { "name": "Corner brackets", "html": "<div class=\"brk\" style=\"color:var(--red);--l:2cqw;--w:.25cqw\">…</div>", "svg": "brkS(x,y,w,h,col,len,sw)", "use": "Framing a hero or target without a full box." },
-    { "name": "Wire + terminals", "svg": "wire('M x y H … V …',col,sw) + dot(x,y,col,r); then drawWires(root, every, 6)", "use": "Connect related boxes. Orthogonal segments only (H/V)." },
-    { "name": "Leader line", "svg": "wire from bar end to a shared vertical rail, square terminal, label in mono", "use": "Tie numbers to bars; align all labels on one rail." },
-    { "name": "Diamond cell", "svg": "diamond(cx,cy,size,label,col,fill)", "use": "Numbered nodes in schematics; merge nodes." },
-    { "name": "Hazard / chevron band", "html": "<div class=\"chev\">…</div> (.down flips) / <div class=\"hazard\" style=\"--c1:var(--hazard)\"></div>", "use": "Top/bottom of alarm screens, kanji panel centred on the band." },
-    { "name": "LED meter", "svg": "column of rects; light count = level; colour by ramp (phosphor→amber→red); unlit = dim token", "use": "CPU, levels, spectrum." },
-    { "name": "Stepped chart", "svg": "path with only H/V commands (M x0 y0 H x1 V y1 …); area = same + V base H start Z, fill at 14%", "use": "Time series. Never smooth curves." },
-    { "name": "Cell field", "svg": "grid of hex or square cells flipping colour in a noisy sweep (position + random jitter), 16 cells per anime frame", "use": "Coverage, memory, contamination, uptime strips." },
-    { "name": "Text wall", "html": "<div class=\"wall\" style=\"color:rgba(255,26,46,.15)\"><span class=\"tall\">Severed</span>×N</div> or wallHTML(word,n,size,col)", "use": "Texture behind heroes; random cells may strobe if the word is critical." },
-    { "name": "Dump", "html": "<div class=\"dump\" style=\"--dump-size:.8cqw;color:var(--phosphor)\"></div>; fill with dumpText(rows, kind) where kind 0=hex,1=log,2=binary", "use": "Ghost-in-the-shell density; scroll 3 lines per anime frame." },
-    { "name": "Crosshair lattice", "html": "grid of + marks every 12.5% × 20%; drifting × markers; corner tags", "use": "Live feeds, cameras, targeting." },
-    { "name": "Ruler", "svg": "rulerS(x,y,w,col,n,labels) — major every 5 ticks, signed labels −n/2…+n/2", "use": "Edges of charts and maps." },
-    { "name": "Grid", "svg": "gridS(x,y,w,h,stepX,stepY,col,opacity≈.2)", "use": "Behind charts, maps, traces." }
+    {
+      "name": "Tag",
+      "html": "<span class=\"tag\" style=\"color:var(--amber)\">Object: 15</span>",
+      "variants": [
+        ".dbl (double rule)",
+        ".solid (filled, ink on void)"
+      ],
+      "svg": "tagS(x,y,str,size,col,{solid,anchor,cls,bg})",
+      "use": "Every label."
+    },
+    {
+      "name": "Cell chain",
+      "html": "<div class=\"chain\" style=\"color:var(--amber);font-size:2.4cqw\"><div class=\"cell\"><small class=\"hx\">Key</small><span class=\"cond\">VALUE</span></div>…</div>",
+      "svg": "chainS(x,y,[[key,value,width,id?],…],col,h)",
+      "use": "Metadata rows, KPIs, manifests. Cells butt together sharing borders."
+    },
+    {
+      "name": "7-segment readout",
+      "html": "el.innerHTML = seg7('04:59:99')",
+      "svg": "seg(x,y,height,'48213',col)",
+      "use": "Timers, counters, KPIs."
+    },
+    {
+      "name": "Chamfer frame",
+      "svg": "chamfer(x,y,w,h,cut,col,strokeWidth,fill) — often doubled: outer 3–4px + inner 1–1.5px inset 14–18",
+      "use": "Panels, tiles, hero frames."
+    },
+    {
+      "name": "Label tab on rail",
+      "svg": "tab(x,y,'TITLE',col,size) placed on a frame's top edge",
+      "use": "Titling a frame."
+    },
+    {
+      "name": "Corner brackets",
+      "html": "<div class=\"brk\" style=\"color:var(--red);--l:2cqw;--w:.25cqw\">…</div>",
+      "svg": "brkS(x,y,w,h,col,len,sw)",
+      "use": "Framing a hero or target without a full box."
+    },
+    {
+      "name": "Wire + terminals",
+      "svg": "wire('M x y H … V …',col,sw) + dot(x,y,col,r); then drawWires(root, every, 6)",
+      "use": "Connect related boxes. Orthogonal segments only (H/V)."
+    },
+    {
+      "name": "Leader line",
+      "svg": "wire from bar end to a shared vertical rail, square terminal, label in mono",
+      "use": "Tie numbers to bars; align all labels on one rail."
+    },
+    {
+      "name": "Diamond cell",
+      "svg": "diamond(cx,cy,size,label,col,fill)",
+      "use": "Numbered nodes in schematics; merge nodes."
+    },
+    {
+      "name": "Hazard / chevron band",
+      "html": "<div class=\"chev\">…</div> (.down flips) / <div class=\"hazard\" style=\"--c1:var(--hazard)\"></div>",
+      "use": "Top/bottom of alarm screens, kanji panel centred on the band."
+    },
+    {
+      "name": "LED meter",
+      "svg": "column of rects; light count = level; colour by ramp (phosphor→amber→red); unlit = dim token",
+      "use": "CPU, levels, spectrum."
+    },
+    {
+      "name": "Stepped chart",
+      "svg": "path with only H/V commands (M x0 y0 H x1 V y1 …); area = same + V base H start Z, fill at 14%",
+      "use": "Time series. Never smooth curves."
+    },
+    {
+      "name": "Cell field",
+      "svg": "grid of hex or square cells flipping colour in a noisy sweep (position + random jitter), 16 cells per anime frame",
+      "use": "Coverage, memory, contamination, uptime strips."
+    },
+    {
+      "name": "Text wall",
+      "html": "<div class=\"wall\" style=\"color:rgba(255,26,46,.15)\"><span class=\"tall\">Severed</span>×N</div> or wallHTML(word,n,size,col)",
+      "use": "Texture behind heroes; random cells may strobe if the word is critical."
+    },
+    {
+      "name": "Dump",
+      "html": "<div class=\"dump\" style=\"--dump-size:.8cqw;color:var(--phosphor)\"></div>; fill with dumpText(rows, kind) where kind 0=hex,1=log,2=binary",
+      "use": "Ghost-in-the-shell density; scroll 3 lines per anime frame."
+    },
+    {
+      "name": "Crosshair lattice",
+      "html": "grid of + marks every 12.5% × 20%; drifting × markers; corner tags",
+      "use": "Live feeds, cameras, targeting."
+    },
+    {
+      "name": "Ruler",
+      "svg": "rulerS(x,y,w,col,n,labels) — major every 5 ticks, signed labels −n/2…+n/2",
+      "use": "Edges of charts and maps."
+    },
+    {
+      "name": "Grid",
+      "svg": "gridS(x,y,w,h,stepX,stepY,col,opacity≈.2)",
+      "use": "Behind charts, maps, traces."
+    }
   ],
-
   "motion": {
-    "grid": { "film_frame_ms": 41.667, "anime_frame_ms": 83.333, "note": "UI state changes on AF ticks; counters/timecodes may tick every film frame." },
+    "grid": {
+      "film_frame_ms": 41.667,
+      "anime_frame_ms": 83.333,
+      "note": "UI state changes on AF ticks; counters/timecodes may tick every film frame. Cuts land on a 4-AF grid (333 ms): broadcast holds 8 units (2.7 s, the default); breakcore uses 2/3/4/6 units.",
+      "cut_grid_ms": 333.333
+    },
     "primitives": [
-      { "name": "hard_cut", "how": "replace screen content; no transition", "timing": "shots/screens hold 6–13 AF" },
-      { "name": "strobe", "how": ".strobe", "timing": "1 film frame on / 1 at --strobe-off (0.42) → 12 Hz", "use": "critical only" },
-      { "name": "strobe_in", "how": ".strobe-in", "timing": "4 cycles then holds on", "use": "critical word arriving" },
-      { "name": "strobe_swap", "how": ".strobe-inv with --a (ink) and --b (field)", "use": "critical boxed word" },
-      { "name": "blink", "how": ".blink", "timing": "4 AF on / 4 AF hidden", "use": "LIVE, REC, RUNNING, TYPING" },
-      { "name": "power_on", "how": ".flick-on", "timing": "4 AF: 0 → .4 → 1 → .5 → 1", "use": "display word lighting up" },
-      { "name": "stochastic_sweep", "how": "sort cells by position + random jitter, flip 16 per AF", "use": "fills, contamination, coverage" },
-      { "name": "stepped_growth", "how": "+16% per AF with 25% random stall", "use": "meters, bars" },
-      { "name": "wire_draw", "how": "drawWires(root, every, 6)", "use": "connectors on screen entry" },
-      { "name": "reveal_rows", "how": "toggle visibility on 2 rows per AF", "use": "lists, traces, logs" },
-      { "name": "marquee", "how": "linear translateX(-50%) over duplicated content", "timing": "~1.3 s per giant word (2.6 s per -50% loop of 4 copies); 6 s for tickers", "use": "the only continuous motion besides traces" },
-      { "name": "jump_not_glide", "how": "markers/reticles teleport between grid positions every 5–6 AF", "use": "targets, cursors" }
+      {
+        "name": "hard_cut",
+        "how": "replace screen content; no transition",
+        "timing": "shots/screens hold 6–13 AF"
+      },
+      {
+        "name": "strobe",
+        "how": ".strobe",
+        "timing": "1 film frame on / 1 at --strobe-off (0.42) → 12 Hz",
+        "use": "critical only"
+      },
+      {
+        "name": "strobe_in",
+        "how": ".strobe-in",
+        "timing": "4 cycles then holds on",
+        "use": "critical word arriving"
+      },
+      {
+        "name": "strobe_swap",
+        "how": ".strobe-inv with --a (ink) and --b (field)",
+        "use": "critical boxed word"
+      },
+      {
+        "name": "blink",
+        "how": ".blink",
+        "timing": "4 AF on / 4 AF hidden",
+        "use": "LIVE, REC, RUNNING, TYPING"
+      },
+      {
+        "name": "power_on",
+        "how": ".flick-on",
+        "timing": "4 AF: 0 → .4 → 1 → .5 → 1",
+        "use": "display word lighting up"
+      },
+      {
+        "name": "stochastic_sweep",
+        "how": "sort cells by position + random jitter, flip 16 per AF",
+        "use": "fills, contamination, coverage"
+      },
+      {
+        "name": "stepped_growth",
+        "how": "+16% per AF with 25% random stall",
+        "use": "meters, bars"
+      },
+      {
+        "name": "wire_draw",
+        "how": "drawWires(root, every, 6)",
+        "use": "connectors on screen entry"
+      },
+      {
+        "name": "reveal_rows",
+        "how": "toggle visibility on 2 rows per AF",
+        "use": "lists, traces, logs"
+      },
+      {
+        "name": "marquee",
+        "how": "linear translateX(-50%) over duplicated content",
+        "timing": "~1.3 s per giant word (2.6 s per -50% loop of 4 copies); 6 s for tickers",
+        "use": "the only continuous motion besides traces"
+      },
+      {
+        "name": "jump_not_glide",
+        "how": "markers/reticles teleport between grid positions every 5–6 AF",
+        "use": "targets, cursors"
+      },
+      {
+        "name": "overwrite_sweep",
+        "how": "replace rows top-down with red DELETED blocks, 2 rows per AF; parallel panels lag by 2 AF",
+        "use": "purge, wipe, reset"
+      },
+      {
+        "name": "infection_takeover",
+        "how": "spreader(cols,rows,seeds).tick(n) each AF; infected cells change state colour (red → sky); panels start staggered",
+        "use": "override, hack, sync, ownership change"
+      },
+      {
+        "name": "erosion",
+        "how": "spreader over a cell field; eaten cells go to --void; label strobes",
+        "use": "breach, damage, data loss"
+      },
+      {
+        "name": "number_scramble",
+        "how": "scramble(8, signed) re-rolls every 2 AF",
+        "use": "analysis, solving, unstable readings"
+      },
+      {
+        "name": "assemble_in",
+        "how": "reveal bars bottom-up 3 per AF per stack, stacks staggered by 3 AF; tags light up after a stack completes",
+        "use": "boot, sync, build"
+      },
+      {
+        "name": "scribble_trace",
+        "how": "Lissajous base + noise polyline (≈220 pts) redrawn every AF inside a bracketed box",
+        "use": "psychograph, unstable signal; pair with a strobing DANGER tag"
+      },
+      {
+        "name": "spin_burst",
+        "how": "glyph rotates in 45° steps for 4 AF, then hides; 2D only",
+        "use": "override/inject moments"
+      },
+      {
+        "name": "stutter",
+        "how": "hard-switch between two near-identical variants every 1–3 AF inside one screen",
+        "use": "tension, recalculation"
+      },
+      {
+        "name": "repeat_edit",
+        "how": "replay the same shot back-to-back (runner: 12% in breakcore)",
+        "use": "emphasis"
+      }
     ],
-    "forbidden": ["ease", "ease-in", "ease-out", "ease-in-out", "cubic-bezier", "spring", "opacity fades", "slides", "camera moves"],
+    "forbidden": [
+      "ease",
+      "ease-in",
+      "ease-out",
+      "ease-in-out",
+      "cubic-bezier",
+      "spring",
+      "opacity fades",
+      "slides",
+      "camera moves"
+    ],
     "scene_runtime": "const c = ctx(); c.every(AF, fn); c.after(ms, fn); c.loop(fn, fps); c.kill() on unmount."
   },
-
   "layout": {
     "screen": "16:9, container-type:inline-size, units in cqw (HTML) or 1600×900 viewBox (SVG). Background --void.",
     "rules": [
@@ -138,8 +457,11 @@
       "Corner tags inside a 2.5cqw safe margin: object/source top-left, LIVE/REC top-right, magnification bottom-right, timecode bottom-left.",
       "Snap geometry to a module grid; diagonals must be exact (pitch x = pitch y).",
       "Align label columns on a shared rail; connect with leader lines.",
-      "Ornament over containment: frames and brackets for engineering feel, not grouping.",
-      "One hero per screen on top of texture (wall/dump/grid)."
+      "One hero per screen on top of texture (wall/dump/grid).",
+      "Asymmetric frames: one cut corner, an open side, or a tab on a rail. Avoid four identical corners around a centred hero.",
+      "Overlap past open frame edges or across bands only (M13).",
+      "Oblique accents, 1–2 per screen (M14).",
+      "Ornament over containment: frames and brackets for engineering feel, not grouping."
     ],
     "patterns": {
       "alarm": "red field + black hero band (.wide strobe) + corner ALERT tags (.strobe) + faint word wall",
@@ -148,46 +470,132 @@
       "status_list": "rows: cond name / status tag / cell strip (one rect per period) / mono %",
       "monitor": "LED columns + cell map + mono process table + stepped sparkline",
       "terminal": "left list with active row inverted (amber field, void ink) + chain header + log rows (tag sender, mono text, mono time) + boxed input with blinking block cursor",
-      "auth": "word wall background + double chamfer panel + code cells + verdict box that strobes"
+      "auth": "word wall on one half + hero word bleeding off the left edge + code cells stepping down on a rail with leader lines + scanner in corner brackets + verdict as a full-width red band (text strobes, band does not)"
     }
   },
-
   "vfx": {
-    "default_on": ["rgb-split (R +2.2px / B −2.2px screen recombine)", "glow (.glow / #sglow)"],
-    "default_off_optional": ["scanlines", "grain (24 fps noise, 13%)", "flicker", "tear"],
+    "default_on": [
+      "rgb-split (R +2.2px / B −2.2px screen recombine)",
+      "glow (.glow / #sglow)"
+    ],
+    "default_off_optional": [
+      "scanlines",
+      "grain (24 fps noise, 13%)",
+      "flicker",
+      "tear"
+    ],
     "note": "VFX are CRT/signal artefacts applied to the screen, never camera effects."
   },
-
   "accessibility": [
     "Strobe/blink disabled under prefers-reduced-motion (built into signal90.css).",
     "Offer a strobe toggle: document.body.classList.toggle('nostrobe').",
     "Strobe keeps a 42% afterimage so text stays readable.",
     "Use real text (HTML/SVG <text>), not images, for labels."
   ],
-
   "js_api": [
-    { "name": "stretchAll", "sig": "stretchAll(root=document)", "does": "wraps .tag contents in .hx and compensates scaleX width with negative margins" },
-    { "name": "seg7", "sig": "seg7(str, {ghost=true})", "returns": "inline <svg> string, height 1em" },
-    { "name": "seg", "sig": "seg(x, y, h, str, col, ghost=true)", "returns": "SVG <g> for a 1600×900 scene" },
-    { "name": "svgT / svgTi", "sig": "svgT(x,y,str,size,fill,anchor='start',sx=.8) / svgTi(id,…)", "returns": "stretched Helvetica <text>" },
-    { "name": "monoT / mincT", "sig": "monoT(x,y,str,size,col,anchor,id) / mincT(x,y,str,size,col,anchor)" },
-    { "name": "chamfer", "sig": "chamfer(x,y,w,h,cut,stroke,sw=2,fill='none')" },
-    { "name": "box", "sig": "box(x,y,w,h,col,sw=3,fill='none',id='')" },
-    { "name": "tagS", "sig": "tagS(x,y,str,size,col,{solid,anchor,cls,id,bg})" },
-    { "name": "chainS", "sig": "chainS(x,y,[[key,value,width,id?]],col,h=74)" },
-    { "name": "tab", "sig": "tab(x,y,str,col,size=26)" },
-    { "name": "brkS", "sig": "brkS(x,y,w,h,col,len=30,sw=3)" },
-    { "name": "gridS", "sig": "gridS(x,y,w,h,stepX,stepY,col,op=.22)" },
-    { "name": "rulerS", "sig": "rulerS(x,y,w,col,n=10,labels=true)" },
-    { "name": "wire / dot / drawWires", "sig": "wire(d,col,sw) / dot(x,y,col,r) / drawWires(root, every, steps=6)" },
-    { "name": "diamond", "sig": "diamond(cx,cy,size,label,col,fill='none')" },
-    { "name": "arcP", "sig": "arcP(cx,cy,r,a0,a1)", "returns": "path d for a ring segment" },
-    { "name": "sv / overlay", "sig": "sv(inner,bg='#000',extraHTML='',glow=true) / overlay(inner)", "returns": "full-screen SVG wrapper (1600×900)" },
-    { "name": "wallHTML / dumpText / dumpLine", "sig": "wallHTML(word,n,size,col,extraCSS) / dumpText(rows,kind) / dumpLine(kind)" },
-    { "name": "ctx", "sig": "ctx() → {every, after, loop, kill}", "does": "timer scope for one screen" },
-    { "name": "constants", "sig": "FR=41.667, AF=83.333, AMB, RED, MNT, PHO, SKY, DIMA, DIMG, DIMR; helpers R(a,b), pick(arr), pad(n,len)" }
+    {
+      "name": "stretchAll",
+      "sig": "stretchAll(root=document)",
+      "does": "wraps .tag contents in .hx and compensates scaleX width with negative margins"
+    },
+    {
+      "name": "seg7",
+      "sig": "seg7(str, {ghost=true})",
+      "returns": "inline <svg> string, height 1em"
+    },
+    {
+      "name": "seg",
+      "sig": "seg(x, y, h, str, col, ghost=true)",
+      "returns": "SVG <g> for a 1600×900 scene"
+    },
+    {
+      "name": "svgT / svgTi",
+      "sig": "svgT(x,y,str,size,fill,anchor='start',sx=.8) / svgTi(id,…)",
+      "returns": "stretched Helvetica <text>"
+    },
+    {
+      "name": "monoT / mincT",
+      "sig": "monoT(x,y,str,size,col,anchor,id) / mincT(x,y,str,size,col,anchor)"
+    },
+    {
+      "name": "chamfer",
+      "sig": "chamfer(x,y,w,h,cut,stroke,sw=2,fill='none')"
+    },
+    {
+      "name": "box",
+      "sig": "box(x,y,w,h,col,sw=3,fill='none',id='')"
+    },
+    {
+      "name": "tagS",
+      "sig": "tagS(x,y,str,size,col,{solid,anchor,cls,id,bg})"
+    },
+    {
+      "name": "chainS",
+      "sig": "chainS(x,y,[[key,value,width,id?]],col,h=74)"
+    },
+    {
+      "name": "tab",
+      "sig": "tab(x,y,str,col,size=26)"
+    },
+    {
+      "name": "brkS",
+      "sig": "brkS(x,y,w,h,col,len=30,sw=3)"
+    },
+    {
+      "name": "gridS",
+      "sig": "gridS(x,y,w,h,stepX,stepY,col,op=.22)"
+    },
+    {
+      "name": "rulerS",
+      "sig": "rulerS(x,y,w,col,n=10,labels=true)"
+    },
+    {
+      "name": "wire / dot / drawWires",
+      "sig": "wire(d,col,sw) / dot(x,y,col,r) / drawWires(root, every, steps=6)"
+    },
+    {
+      "name": "diamond",
+      "sig": "diamond(cx,cy,size,label,col,fill='none')"
+    },
+    {
+      "name": "arcP",
+      "sig": "arcP(cx,cy,r,a0,a1)",
+      "returns": "path d for a ring segment"
+    },
+    {
+      "name": "sv / overlay",
+      "sig": "sv(inner,bg='#000',extraHTML='',glow=true) / overlay(inner)",
+      "returns": "full-screen SVG wrapper (1600×900)"
+    },
+    {
+      "name": "wallHTML / dumpText / dumpLine",
+      "sig": "wallHTML(word,n,size,col,extraCSS) / dumpText(rows,kind) / dumpLine(kind)"
+    },
+    {
+      "name": "ctx",
+      "sig": "ctx() → {every, after, loop, kill}",
+      "does": "timer scope for one screen"
+    },
+    {
+      "name": "constants",
+      "sig": "FR=41.667, AF=83.333, AMB, RED, MNT, PHO, SKY, DIMA, DIMG, DIMR; helpers R(a,b), pick(arr), pad(n,len)"
+    },
+    {
+      "name": "scramble",
+      "sig": "scramble(n=8, signed=true)",
+      "returns": "'+ 04382709' style string"
+    },
+    {
+      "name": "sweepOrder",
+      "sig": "sweepOrder(items, key(item,i), jitter=1)",
+      "returns": "items sorted for a noisy sweep"
+    },
+    {
+      "name": "spreader",
+      "sig": "spreader(cols, rows, seeds[[x,y]]) → {on:Set, tick(n)}",
+      "does": "grows an infected/eroded region; indices are y*cols+x"
+    }
   ],
-
   "review_checklist": [
     "Is every surface flat (no rotate/perspective except 45° diamond glyphs)?",
     "Is all Latin text uppercase stretched Helvetica, with stretchAll() called?",
@@ -196,6 +604,53 @@
     "Is there ornament (frame/brackets/wires/tabs/rulers) and, for heroes, a texture layer?",
     "Do all animations tick on AF/FR with steps, no easing?",
     "Is strobe limited to critical elements, with nostrobe + reduced-motion honoured?",
-    "Is all copy original (no references to real shows, brands or characters)?"
-  ]
+    "Is all copy original (no references to real shows, brands or characters)?",
+    "Is the composition asymmetric, with no modal-style centred panel?",
+    "Do overlaps cross open edges or bands only?",
+    "Is oblique used as a sparse accent?"
+  ],
+  "sound": {
+    "status": "documented only. Not implemented in the kit.",
+    "source": "study 2 (20 s sound-designed reference): see reference notes; measured with onset, spectral-novelty and AM-rate analysis",
+    "principles": [
+      "Sound is its own layer: texture tends to change at picture cuts (~30% above random), but it can hold across stutter cuts.",
+      "Pure sine/square tones, no music samples.",
+      "Chatter rides the anime-frame grid (~83–90 ms)."
+    ],
+    "layers": [
+      {
+        "name": "bed",
+        "spec": "sub-bass rumble 30–120 Hz under every screen; louder on heavy screens"
+      },
+      {
+        "name": "pulses",
+        "spec": "very tonal low hits on an augmented triad: 194 / 248 / 312 / 388 Hz (≈G3 B3 D♯4 G4), plus 151 Hz (D3) and 345 Hz (F4); AM rate 3.5–8 Hz"
+      },
+      {
+        "name": "carrier",
+        "spec": "steady sines ~1.3 kHz and ~2.5 kHz (harmonic pair) under data screens"
+      },
+      {
+        "name": "beep_train",
+        "spec": "1314 Hz beep every 90–130 ms during sweeps; 6.5 kHz dash train during stutters"
+      },
+      {
+        "name": "chatter",
+        "spec": "random-pitch blips 600–2400 Hz, low tonality, every ~90 ms"
+      },
+      {
+        "name": "alarm",
+        "spec": "pulse rate ≈11–12 Hz, aligned with the visual strobe"
+      },
+      {
+        "name": "static",
+        "spec": "broadband noise burst as a transition hit"
+      },
+      {
+        "name": "sequencer",
+        "spec": "short sine notes stepping 250–700 Hz over a bass pulse (outro / processing)"
+      }
+    ],
+    "editing": "cuts on a 0.36 s grid (≈167 BPM eighths) in the reference; SIGNAL/90 uses the 4-AF (333 ms) cut grid"
+  }
 }

@@ -31,7 +31,7 @@ function seg7(str,{ghost=true}={}){let x=0,out='';
 /* ornament helpers (SVG) */
 function chamfer(x,y,w,h,c,stroke,sw=2,fill='none'){return `<polygon points="${x+c},${y} ${x+w-c},${y} ${x+w},${y+c} ${x+w},${y+h-c} ${x+w-c},${y+h} ${x+c},${y+h} ${x},${y+h-c} ${x},${y+c}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`}
 // stretched Helvetica inside SVG: scale the glyphs, not the position
-function svgT(x,y,str,size,fill,anchor='start',sx=.8){return `<text transform="translate(${x},${y}) scale(${sx},1)" text-anchor="${anchor}" font-family="Helvetica Neue,Helvetica,Arimo,Arial,sans-serif" font-weight="700" font-size="${size}" fill="${fill}">${str}</text>`}
+function svgT(x,y,str,size,fill,anchor='start',sx=.8,sk=0){return `<text transform="translate(${x},${y}) scale(${sx},1)${sk?` skewX(${sk})`:''}" text-anchor="${anchor}" font-family="Helvetica Neue,Helvetica,Arimo,Arial,sans-serif" font-weight="700" font-size="${size}" fill="${fill}">${str}</text>`}
 function diamond(cx,cy,s,label,col,fill='none'){return `<g class="dia" transform="translate(${cx},${cy})"><rect x="${-s/2}" y="${-s/2}" width="${s}" height="${s}" transform="rotate(45)" fill="${fill}" stroke="${col}" stroke-width="3"/>${svgT(0,s*.22,label,s*.62,col,'middle',.9)}</g>`}
 function wire(d,col,sw=3){return `<path class="wire" d="${d}" stroke="${col}" stroke-width="${sw}"/>`}
 function dot(x,y,col,r=5){return `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}"/>`}
@@ -65,12 +65,12 @@ function svgTi(id,...a){return svgT(...a).replace('<text ',`<text id="${id}" `)}
 function monoT(x,y,str,size,col,anchor='start',id=''){return `<text ${id?`id="${id}"`:''} x="${x}" y="${y}" font-family="Share Tech Mono,monospace" font-size="${size}" fill="${col}" text-anchor="${anchor}" xml:space="preserve">${str}</text>`}
 function mincT(x,y,str,size,col,anchor='start'){return `<text x="${x}" y="${y}" font-family="Shippori Mincho B1,Hiragino Mincho ProN,serif" font-weight="800" font-size="${size}" fill="${col}" text-anchor="${anchor}">${str}</text>`}
 // 7-segment drawn straight into an SVG: top-left x,y, height h
-function seg(x,y,h,str,col,ghost=true){let xx=0,out='';
+function seg(x,y,h,str,col,ghost=true,sk=0){let xx=0,out='';
   for(const ch of String(str)){
     if(ch===':'||ch==='.'){out+=ch===':'?`<rect x="${xx+2}" y="24" width="9" height="9"/><rect x="${xx+2}" y="60" width="9" height="9"/>`:`<rect x="${xx+2}" y="78" width="9" height="9"/>`;xx+=17;continue}
     const on=SEG[ch]??'';for(const k in SEGP){if(on.includes(k))out+=`<polygon points="${SEGP[k]}" transform="translate(${xx},0)"/>`;else if(ghost)out+=`<polygon opacity=".08" points="${SEGP[k]}" transform="translate(${xx},0)"/>`}
     xx+=58}
-  return `<g transform="translate(${x},${y}) scale(${(h/94).toFixed(4)})" fill="${col}">${out}</g>`}
+  return `<g transform="translate(${x},${y}) scale(${(h/94).toFixed(4)})${sk?` skewX(${sk})`:''}" fill="${col}">${out}</g>`}
 function tagS(x,y,str,size,col,o={}){const w=str.length*size*.6+size*.8,h=size*1.32;const x0=o.anchor==='middle'?x-w/2:o.anchor==='end'?x-w:x;
   return `<g class="${o.cls||''}" ${o.id?`id="${o.id}"`:''}>${box(x0,y,w,h,col,o.sw||3,o.solid?col:(o.bg??'#000'))}${svgT(x0+w/2,y+h*.76,str,size,o.solid?'#000':col,'middle',.84)}</g>`}
 // cell chain: items [key, value, width, id?]
@@ -85,3 +85,12 @@ function arcP(cx,cy,r,a0,a1){const P=a=>[(cx+r*Math.cos(a)).toFixed(1),(cy+r*Mat
 const wallHTML=(word,n,size,col,extra='')=>`<div class="abs wall" style="inset:0;color:${col};gap:0 1.2cqw;${extra}">${Array(n).fill(`<span class="tall" style="font-size:${size};line-height:1">${word}</span>`).join('')}</div>`;
 const dumpText=(n,kind)=>Array.from({length:n},()=>dumpLine(kind??pick([0,1]))).join('\n');
 
+
+/* ---------- study-2 motion helpers ---------- */
+// signed 8-digit scramble, e.g. "+04382709"
+const scramble=(n=8,signed=true)=>(signed?(Math.random()<.5?'+ ':'− '):'')+Array.from({length:n},()=>Math.random()*10|0).join('');
+// order items for a sweep: key(item) plus random jitter → flip in this order
+const sweepOrder=(items,key,jitter=1)=>items.map((it,i)=>({it,k:key(it,i)+Math.random()*jitter})).sort((a,b)=>a.k-b.k).map(o=>o.it);
+// grid spread (infection / erosion): cells[] with .x,.y; seeds infect neighbours each tick
+function spreader(cols,rows,seeds){const on=new Set(seeds.map(([x,y])=>y*cols+x));
+  return {on,tick(n=30){const front=[...on];for(let k=0;k<n;k++){const c=front[Math.random()*front.length|0];const x=c%cols,y=c/cols|0;const [dx,dy]=pick([[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1]]);const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<cols&&ny<rows)on.add(ny*cols+nx)}return on}}}

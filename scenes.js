@@ -42,8 +42,8 @@ const SCENES=[
       <div class="cell"><small class="hx">Object</small><span class="cond">15th</span></div>
       <div class="cell"><small class="hx">Operator : none</small><span class="cond">Unit-02</span></div>
       <div class="cell"><small class="hx">Operator : K.Ross</small><span class="cond">Unit-01</span></div></div></div>
-   <div class="abs" style="left:15cqw;top:17cqw"><span class="cond glow" style="font-size:3.4cqw">Lower shaft · sector 9</span><br><span class="tall glow" style="font-size:14cqw">Barrier field</span></div>
-   <div class="abs" style="left:15cqw;top:36cqw;display:flex;align-items:flex-end;gap:2cqw"><span class="cond glow" style="font-size:4cqw">Generation</span><span class="tag dbl glow strobe" style="color:var(--red);font-size:7cqw">Detected</span></div>
+   <div class="abs" style="left:15cqw;top:17cqw"><span class="cond glow" style="font-size:3.4cqw">Lower shaft · sector 9</span><br><span class="tall obl glow" style="font-size:14cqw">Barrier field</span></div>
+   <div class="abs" style="left:15cqw;top:36cqw;display:flex;align-items:flex-end;gap:2cqw"><span class="cond obl glow" style="font-size:4cqw">Generation</span><span class="tag dbl glow strobe" style="color:var(--red);font-size:7cqw">Detected</span></div>
    <div class="abs mono" style="left:15cqw;bottom:2.5cqw;font-size:1.3cqw">ENERGY LEVEL: HIGHEST EVER RECORDED · VERIFIED TRIAD-1·2·3</div></div>`;
   const bL=el.querySelector('#bL'),bR=el.querySelector('#bR');const upd=()=>{bL.textContent=bin();bR.textContent=bin()};upd();c.every(AF,upd);
 }},
@@ -87,21 +87,23 @@ const SCENES=[
   c.every(AF*3,()=>{const d=pick(dias);const hot=d.getAttribute('fill')==='none';d.setAttribute('fill',hot?RED:'none');d.setAttribute('stroke',hot?RED:AMB)});
 }},
 {name:'COUNTDOWN / RESERVE CELL',build(el,c){
-  el.innerHTML=`<div class="fill" style="background:#050404">
-   ${overlay(chamfer(190,130,1050,580,30,AMB,3)+chamfer(206,146,1018,548,22,AMB,1)+tab(240,130,'RESERVE CELL 2',AMB,24)+brkS(1270,230,290,480,AMB,30,3)+monoT(1290,280,'CELL MAP',20,AMB)+gridS(1290,300,250,380,50,38,AMB,.35))}
+  // asymmetric frame: one cut corner, open right side. The digits run out past it on purpose.
+  const fr=`<path d="M190 730 V200 L250 140 H760" fill="none" stroke="${AMB}" stroke-width="3"/><path d="M206 714 V208 L258 156 H600" fill="none" stroke="${AMB}" stroke-width="1"/><path d="M190 730 H1080 L1130 680" fill="none" stroke="${AMB}" stroke-width="3"/>`
+    +tab(262,140,'RESERVE CELL 2',AMB,24)+dot(760,140,AMB)+dot(1130,680,AMB)+rulerS(1180,700,380,AMB,6,true);
+  el.innerHTML=`<div class="fill" style="background:#050404">${overlay(fr)}
    <div class="abs wedge" style="left:0;top:0;width:9%;height:100%;opacity:.85"></div>
-   <div class="abs" style="left:13%;top:5%;color:var(--amber);display:flex;align-items:baseline;gap:1.5cqw"><span class="mincho glow" style="font-size:3.4cqw">予備電源</span><span class="cond" style="font-size:2cqw">TIME TO DEPLETION :</span></div>
-   <div class="abs" style="right:3%;top:4%;text-align:right;color:var(--red)"><div class="mincho glow" style="font-size:5cqw;line-height:1">外部</div><div class="wide" data-o="r" style="font-size:2.2cqw;color:#fff">EXTERNAL</div></div>
+   <div class="abs" style="left:13%;top:5%;color:var(--amber);display:flex;align-items:baseline;gap:1.5cqw"><span class="mincho glow" style="font-size:3.4cqw">予備電源</span><span class="cond obl" style="font-size:2.2cqw">TIME TO DEPLETION :</span></div>
+   <div class="abs" style="right:3%;top:4%;text-align:right;color:var(--red)"><div class="mincho glow" style="font-size:5cqw;line-height:1">外部</div><div class="wide obl" data-o="r" style="font-size:2.4cqw;color:#fff">EXTERNAL</div></div>
    <div class="abs hazard" style="right:3%;bottom:4%;width:20%;height:3cqw;font-size:1.4cqw"></div>
-   <div class="abs glow" id="tm" style="left:14%;top:27%;color:#ff6a1a;font-size:16cqw;line-height:1"></div>
-   <div class="abs chain" style="left:14%;top:67%;color:#6f3a12;font-size:2.4cqw">${['HOLD','LOW','NOMINAL','OVERDRIVE'].map((m,i)=>`<div class="cell" style="${i==3?'background:var(--red);color:#000;border-color:var(--red)':''};padding:.3cqw 1.2cqw"><span class="cond">${m}</span></div>`).join('')}</div>
+   <div class="abs glow obl-seg" id="tm" style="left:14%;top:26%;color:#ff6a1a;font-size:17cqw;line-height:1"></div>
+   <div class="abs chain" style="left:15%;top:68%;color:#6f3a12;font-size:2.4cqw">${['HOLD','LOW','NOMINAL','OVERDRIVE'].map((m,i)=>`<div class="cell" style="${i==3?'background:var(--red);color:#000;border-color:var(--red)':''};padding:.3cqw 1.2cqw"><span class="cond obl">${m}</span></div>`).join('')}</div>
    <div class="abs tag strobe" style="left:13%;bottom:4%;color:var(--red);font-size:2.2cqw">DANGER · EMERGENCY</div></div>`;
   const tm=el.querySelector('#tm');const t0=performance.now();const start=59990;
   c.loop(t=>{const r=Math.max(0,start-(t-t0)*9);tm.innerHTML=seg7(`${pad(r/60000)}:${pad(r/1000%60)}:${pad(r/10%100)}`)},24);
 }},
 {name:'TRIAD VOTE',build(el,c){
   const panel=(n,name,col,clip,pos)=>`<div class="abs" data-p="${n}" data-c="${col}" style="${pos};background:${col};clip-path:${clip};display:flex;flex-direction:column;justify-content:center;padding:0 3cqw"><span class="cond" style="font-size:3.4cqw;color:#062">${name}</span><span class="mincho st" style="font-size:4.4cqw;color:#063">承認</span></div>`;
-  const w=overlay(wire('M800 432 V500',AMB)+wire('M736 700 H770 V580',AMB)+wire('M864 700 H830 V580',AMB)+dot(800,432,AMB)+dot(736,700,AMB)+dot(864,700,AMB)+chamfer(720,500,160,80,12,AMB,3,'#000')+brkS(560,40,480,820,AMB,40,2));
+  const w=overlay(wire('M800 432 V500',AMB)+wire('M736 700 H770 V580',AMB)+wire('M864 700 H830 V580',AMB)+dot(800,432,AMB)+dot(736,700,AMB)+dot(864,700,AMB)+chamfer(720,500,160,80,12,AMB,3,'#000')+svgT(800,556,'TRIAD',40,AMB,'middle',.74)+brkS(560,40,480,820,AMB,40,2));
   el.innerHTML=`<div class="fill" style="background:#000">${w}
     <div class="abs mincho glow" style="left:4cqw;top:3cqw;color:var(--amber);font-size:5cqw">提訴</div>
     <div class="abs chain glow" style="left:4cqw;top:12cqw;color:var(--amber);font-size:2.2cqw;flex-direction:column;align-items:flex-start">
@@ -113,8 +115,7 @@ const SCENES=[
     <div class="abs tag strobe" style="right:4cqw;top:12cqw;color:var(--red);font-size:2.6cqw;font-family:var(--f-mincho)">審議中</div>
     ${panel(1,'VESTA·2','var(--sky)','polygon(0 0,100% 0,100% 70%,50% 100%,0 70%)','left:37%;top:8%;width:26%;height:40%')}
     ${panel(2,'JANUS·3','var(--mint)','polygon(0 0,80% 0,100% 35%,100% 100%,0 100%)','left:18%;top:56%;width:28%;height:36%')}
-    ${panel(3,'ARGUS·1','var(--mint)','polygon(20% 0,100% 0,100% 100%,0 100%,0 35%)','left:54%;top:56%;width:28%;height:36%')}
-    <div class="abs cond glow" data-o="c" style="left:50%;top:57.6%;translate:-50% 0;color:var(--amber);font-size:3cqw">TRIAD</div></div>`;
+    ${panel(3,'ARGUS·1','var(--mint)','polygon(20% 0,100% 0,100% 100%,0 100%,0 35%)','left:54%;top:56%;width:28%;height:36%')}</div>`;
   drawWires(el,c.every,4);
   const ps=[...el.querySelectorAll('[data-p]')];let code=239;
   const set=(p,ok)=>{p.style.background=ok?p.dataset.c:RED;const st=p.querySelector('.st');st.textContent=ok?'承認':'否定';st.style.color=ok?'#063':'#fff';st.classList.toggle('strobe',!ok)};
@@ -171,7 +172,7 @@ const SCENES=[
     s+=`<g class="row" style="visibility:hidden">${box(x,y,BW,BH,'#000',0,'#000')}<g class="tk">${ticks}</g>${wire(`M${x+BW} ${y+BH/2} H${RAIL}`,'#000',3)}<rect x="${x+BW-4}" y="${y+BH/2-4}" width="8" height="8" fill="#000"/><rect x="${RAIL-8}" y="${y+BH/2-8}" width="16" height="16" fill="#000"/>${monoT(RAIL+22,y+BH/2+9,pad(223+i,5),26,'#000')}</g>`}
   s+=tagS(1560,30,'INDEX TRACE · CH 07',28,'#000',{anchor:'end',bg:'none'});
   [['SCAN','LINEAR'],['PITCH','56 U'],['DEPTH','12']].forEach(([k,v],i)=>{s+=box(1380,300+i*96,180,80,'#000',3)+svgT(1392,324+i*96,k,16,'#000','start',.84)+svgT(1392,366+i*96,v,36,'#000','start',.74)});
-  s+=svgTi('cnt',X0,860,'00223',250,'#000','start',.56)+monoT(X0+4,640,'TRACE COUNT',22,'#000');
+  s+=svgTi('cnt',X0,860,'00223',250,'#000','start',.56,-12)+monoT(X0+4,640,'TRACE COUNT',22,'#000');
   el.innerHTML=sv(s,'#d65f0e','',false);
   const rows=[...el.querySelectorAll('.row')],tks=rows.map(r=>[...r.querySelectorAll('.tk rect')]);const cur=Array(N).fill(0);let i=0,n=223;
   c.every(AF,()=>{for(let k=0;k<2&&i<N;k++)rows[i++].style.visibility='visible';
@@ -209,7 +210,7 @@ const SCENES=[
   el.innerHTML=`<div class="fill" style="background:#050000;display:flex;flex-direction:column">
      <div class="dump" style="flex:1;--dump-size:.95cqw;color:var(--red);opacity:.3;padding-top:.4cqw">${warn}</div>
      <div style="height:.35cqw;background:var(--amber);box-shadow:0 0 1cqw var(--amber)"></div>
-     <div style="padding:1.5cqw 0 0 0;margin-left:-3cqw;white-space:nowrap"><span class="wide glow strobe-in" style="color:var(--red);font-size:19cqw">KEEP OUT</span></div>
+     <div style="padding:1.5cqw 0 0 0;margin-left:-3cqw;white-space:nowrap"><span class="wide obl glow strobe-in" style="color:var(--red);font-size:19cqw">KEEP OUT</span></div>
      <div style="padding-left:5cqw;display:flex;align-items:baseline;gap:3cqw"><span class="mincho glow" style="color:var(--red);font-size:4.5cqw;line-height:1.3">立入禁止区域</span><span class="cond" style="color:var(--red);font-size:2.6cqw">LOWER SHAFT : LEVEL 1 · SECTOR 2</span></div>
      <div class="mono" style="color:var(--red);font-size:1.15cqw;padding:0 0 1.5cqw 5cqw;opacity:.8">TRESPASSERS ENTERING WITHOUT CLEARANCE WILL BE DETAINED. NO EXCEPTIONS. NO EXCEPTIONS.</div>
      <div style="height:.35cqw;background:var(--amber);box-shadow:0 0 1cqw var(--amber)"></div>
@@ -291,6 +292,71 @@ const SCENES=[
   const draw=()=>cols.forEach((col,i)=>col.textContent=buf[i].join('\n'));draw();const hl=el.querySelector('#hl');
   c.every(AF,()=>{buf.forEach((b,i)=>{for(let k=0;k<3;k++){b.shift();b.push(dumpLine(kinds[i]))}});draw();if(Math.random()<.3){hl.style.top=R(8,70)+'%';hl.style.left=pick(['2%','26%','50%','74%'])}});
 }},
+{name:'PURGE (OVERWRITE SWEEP)',build(el,c){
+  const P=[[60,150],[830,150]],W=710,ROWS=28,RH=23;
+  let s=tagS(60,40,'MEMORY PURGE · SECTOR 7F',30,AMB)+`<g class="strobe">${tagS(1540,40,'PURGE IN PROGRESS',30,RED,{anchor:'end',solid:true})}</g>`;
+  P.forEach(([x,y],p)=>{s+=chamfer(x-14,y-14,W+28,ROWS*RH+28,14,AMB,2.5)+tab(x+10,y-14,'BANK 0'+(p+1),AMB,20);
+    for(let r=0;r<ROWS;r++)s+=`<g class="rw" data-p="${p}" data-r="${r}">${monoT(x,y+r*RH+17,dumpLine(r%3?1:0).slice(0,64),15,AMB)}</g>`});
+  s+=box(60,830,150,44,AMB,3,'#000')+svgT(135,862,'06:00 AM',28,AMB,'middle',.74)+monoT(240,862,'BLOCKS REMAINING',20,AMB)+svgTi('rem',470,864,'',32,RED,'start',.74,-12);
+  el.innerHTML=sv(s);
+  const rows=[...el.querySelectorAll('.rw')];let k=0;
+  const del=g=>{if(g.dataset.d)return;g.dataset.d=1;const p=+g.dataset.p,r=+g.dataset.r,[x,y]=P[p];let h=`<rect x="${x}" y="${y+r*RH+2}" width="${W}" height="${RH-4}" fill="${RED}"/>`;for(let q=0;q<6;q++)h+=svgT(x+8+q*118,y+r*RH+17,'DELETED',15,'#000','start',.84);g.innerHTML=h};
+  c.every(AF,()=>{for(let p=0;p<2;p++)for(let n=0;n<2;n++){const r=k*2+n-p*4;if(r>=0&&r<ROWS)del(rows[p*ROWS+r])}k++;el.querySelector('#rem').textContent=pad(Math.max(0,ROWS*2-(k*4-4)),4)});
+}},
+{name:'TAKEOVER (INFECTION)',build(el,c){
+  const RW=16,CW=14;const panels=[[80,190,'NODE-1',40],[700,250,'NODE-2',26],[1140,310,'NODE-3',20]];
+  let s=chainS(60,30,[['CODE','378',140,'cd'],['FILE','NODE_SYS',220],['PRIORITY','AAA',160]],AMB,72)+mincT(1540,96,'決議',72,AMB,'end')+tagS(1540,120,'審議中',26,RED,{anchor:'end',cls:'strobe'});
+  panels.forEach(([x,y,n,C],p)=>{s+=chamfer(x-12,y-12,C*CW+24,RW*CW+84,14,AMB,2.5);for(let j=0;j<RW;j++)for(let i=0;i<C;i++)s+=`<rect class="px${p}" x="${x+i*CW}" y="${y+j*CW}" width="${CW}" height="${CW}" fill="${RED}"/>`;
+    s+=svgT(x+C*CW/2,y+RW*CW/2+24,n,72,'#000','middle',.74,-12)+svgTi('st'+p,x,y+RW*CW+52,'HOLDING',28,AMB,'start',.84)});
+  s+=wire('M652 300 H670 V360 H688',AMB)+wire('M1076 360 H1100 V420 H1128',AMB)+dot(652,300,AMB)+dot(1128,420,AMB);
+  s+=svgT(380,600,'OVERRIDE SIGNAL',30,MNT,'middle',.84)+`<g id="spin" transform="translate(380,690)"><rect x="-150" y="-18" width="300" height="36" fill="${MNT}"/><rect x="-60" y="-50" width="120" height="100" fill="none" stroke="${MNT}" stroke-width="4"/></g>`;
+  s+=chamfer(700,770,840,100,12,AMB,1.5)+`<g id="lg"></g>`;
+  el.innerHTML=sv(s);
+  const px=panels.map((_,p)=>[...el.querySelectorAll('.px'+p)]);const sp=panels.map(([,,,C])=>spreader(C,RW,[[0,RW-1],[1,RW-1],[0,RW-2]]));let t=0,code=378;
+  c.every(AF,()=>{t++;const sp0=el.querySelector('#spin');sp0.style.visibility=(t%24)<4?'':'hidden';sp0.setAttribute('transform',`translate(380,690) rotate(${(t%24)*45})`);
+    panels.forEach(([,,,C],p)=>{if(t<p*7+2)return;const on=sp[p].tick(70);on.forEach(i=>px[p][i]&&px[p][i].setAttribute('fill',SKY));const done=on.size/(C*RW);el.querySelector('#st'+p).textContent=done>.97?'OVERRIDDEN':'INFECTED '+(done*100|0)+'%'});
+    el.querySelector('#cd').textContent=++code;el.querySelector('#lg').innerHTML=[0,1,2].map(i=>monoT(724,806+i*24,dumpLine(1).slice(0,70),17,AMB)).join('')});
+}},
+{name:'BREACH (EROSION)',build(el,c){
+  const s0=26,cols=36,rows=24;let s='';const cells=[];
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const x=i*s0*1.732+(j%2?s0*.866:0)-10,y=j*s0*1.5-10;let p='';for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30);p+=`${(x+s0*.92*Math.cos(a)).toFixed(1)},${(y+s0*.92*Math.sin(a)).toFixed(1)} `}s+=`<polygon class="hc" points="${p}" fill="#e2702a" stroke="#4a1a06" stroke-width="2"/>`;cells.push(1)}
+  s+=`<g class="strobe">${tagS(40,40,'PENETRATION BY FOREIGN FIELD',36,AMB,{sw:4})}</g>`+tagS(1560,770,'UNIT-00 · FIELD IN OPERATION',30,AMB,{anchor:'end'})+monoT(1560,850,'FIELD STRENGTH AT ABSOLUTE LIMIT',22,AMB,'end');
+  el.innerHTML=sv(s,'radial-gradient(80% 90% at 30% 40%,#3a0c02,#050404)');
+  const hs=[...el.querySelectorAll('.hc')];const sp=spreader(cols,rows,[[4,12],[20,4],[28,18]]);
+  c.every(AF,()=>{sp.tick(45).forEach(i=>hs[i]&&hs[i].setAttribute('fill','#050404'))});
+}},
+{name:'FLUX ANALYSIS (SCRAMBLE)',build(el,c){
+  let s=`<line x1="60" y1="450" x2="1560" y2="450" stroke="#fff" stroke-width="2"/>`;
+  for(let k=0;k<16;k++){s+=`<line x1="60" y1="${90+k*22}" x2="1560" y2="${90+k*22}" stroke="${k<8?PHO:RED}" stroke-width="1" opacity=".35"/><line x1="60" y1="${470+k*22}" x2="1560" y2="${470+k*22}" stroke="${RED}" stroke-width="1" opacity=".35"/>`}
+  s+=`<line x1="60" y1="80" x2="60" y2="820" stroke="#fff" stroke-width="2"/>`;for(let k=0;k<=37;k++)s+=`<line x1="${k%5?50:40}" y1="${80+k*20}" x2="60" y2="${80+k*20}" stroke="#fff" stroke-width="1.5"/>`;
+  s+=`<g id="ct"></g>`;[['c0',1080,62],['c1',1400,62],['c2',1080,868],['c3',1400,868]].forEach(([id,x,y])=>s+=svgTi(id,x,y,'',36,'#fff','start',.8));
+  el.innerHTML=sv(s);
+  const pals=[['#7df5b4','#4ad0c8','#5a7bff'],['#ffd27a','#ff9a3c','#ff5a3c'],['#9c7bff','#6e3cff','#ff2f8e']];let t=0,variant=0,pal=0;
+  const draw=()=>{let g='';for(let k=0;k<16;k++){const y0=100+k*46;const col=pals[pal][k<5?0:k<11?1:2];let d='';
+    for(let x=80;x<=1540;x+=30){const pinch=Math.exp(-(((x-1150)/(70+variant*40))**2));const y=y0+Math.sin(x*.004+k*.4+t*.15+variant*2)*(26+variant*14)*(1-pinch)+(450-y0)*.55*pinch;d+=(x===80?'M':'L')+x+' '+y.toFixed(1)}
+    g+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="2.5"/>`}el.querySelector('#ct').innerHTML=g};
+  draw();
+  c.every(AF,()=>{t++;if(Math.random()<.4)variant=1-variant;if(t%6===0)pal=(pal+1)%3;draw();if(t%2===0)['c0','c1','c2','c3'].forEach(id=>el.querySelector('#'+id).textContent=scramble())});
+}},
+{name:'SYNC TOWERS (ASSEMBLE-IN)',build(el,c){
+  const T=[[140,0,16],[470,3,11],[1010,6,14]];let s='';
+  T.forEach(([x,delay,N],ti)=>{for(let b=0;b<N;b++){const y=740-b*42;s+=`<g class="bar t${ti}" style="visibility:hidden"><polygon points="${x},${y+36} ${x+220},${y-8} ${x+220},${y+14} ${x},${y+58}" fill="${MNT}"/>${b%4===1?`<g transform="translate(${x+110},${y+26}) rotate(-11.3)"><rect x="-34" y="-12" width="68" height="24" fill="#000"/>${svgT(0,8,'SYNC',20,DIMG,'middle',.84).replace('<text ','<text class="sy" ')}</g>`:''}</g>`;
+      if(b%3===0)s+=monoT(x-20,y+40,'A'+pad(13+b+ti*20,3),16,AMB,'end')+`<line x1="${x-14}" y1="${y+34}" x2="${x}" y2="${y+34}" stroke="${AMB}" stroke-width="2"/>`}
+    s+=wire(`M${x+110} 800 V840 H1300`,AMB,3)});
+  s+=chamfer(1300,800,260,80,12,MNT,3,'#000')+svgTi('bus',1430,852,'SYNC BUS 0/3',34,MNT,'middle',.74)+tagS(1560,30,'MAIN SYNC SYSTEM · SECTOR 4',26,AMB,{anchor:'end'});
+  el.innerHTML=sv(s);drawWires(el,c.every,6);
+  const bars=T.map((_,i)=>[...el.querySelectorAll('.t'+i)]);let t=0;
+  c.every(AF,()=>{t++;let done=0;T.forEach(([,delay,N],i)=>{const n=Math.max(0,(t-delay)*3);bars[i].forEach((b,k)=>b.style.visibility=k<n?'visible':'hidden');if(n>=N){done++;bars[i].forEach(b=>b.querySelectorAll('.sy').forEach(x=>x.setAttribute('fill',AMB)))}});el.querySelector('#bus').textContent=`SYNC BUS ${done}/3`});
+}},
+{name:'PSYCHOGRAPH (SCRIBBLE)',build(el,c){
+  let s=tagS(40,26,'NEURAL TRACE DISPLAY',30,AMB)+svgT(470,56,'PHASE 4',28,AMB,'start',.74)+svgT(470,92,'K.ROSS : UNIT-02 OPERATOR',32,AMB,'start',.74,-12);
+  for(let i=0;i<10;i++){const y=170+i*46;s+=svgT(60,y+8,'LINK A'+"'".repeat(i%3),20,AMB,'start',.84)+`<path d="M180 ${y} H${300+i*18} L700 640" fill="none" stroke="${AMB}" stroke-width="1.5" opacity=".8"/>`}
+  s+=brkS(720,140,820,500,AMB,36,3)+`<polyline id="sc" fill="none" stroke="#f2e9a0" stroke-width="2"/>`;
+  s+=`<g class="strobe">${box(1250,160,270,96,RED,3,'none')}${svgT(1385,200,'APPROACHING LIMITS',26,RED,'middle',.74)}${svgT(1385,242,'DANGER',34,RED,'middle',.74)}</g>`;
+  s+=rulerS(60,690,1480,AMB,10,true)+monoT(60,850,'TRACE · 220 SAMPLES / FRAME · OSCILLATION OUT OF BAND',20,AMB);
+  el.innerHTML=sv(s);let t=0;
+  c.every(AF,()=>{t++;const a=R(1,4),b=R(1,4),ph=R(0,6);el.querySelector('#sc').setAttribute('points',Array.from({length:220},(_,i)=>{const u=i/220*Math.PI*8;return `${(1130+Math.sin(a*u+ph)*360+R(-40,40)).toFixed(0)},${(390+Math.sin(b*u)*220+R(-30,30)).toFixed(0)}`}).join(' '))});
+}},
 {name:'CLEARANCE DOCUMENT',build(el){
   let lat='';for(let k=-3;k<=3;k++)lat+=`<ellipse rx="${Math.abs(Math.cos(k/3.5*1.4))*48}" ry="48" fill="none" stroke="#fff" stroke-width="1.6"/>`;
   for(let k=-2;k<=2;k++){const w=Math.sqrt(48*48-(k*18)**2);lat+=`<line x1="${-w}" x2="${w}" y1="${k*18}" y2="${k*18}" stroke="#fff" stroke-width="1.6"/>`}
@@ -330,7 +396,7 @@ const SCENES=[
   let hits=48213;const vals=[12408,3.42,38.9];const data=Array.from({length:24},(_,i)=>Math.round(170+130*Math.sin(i/3.2)+i*7+R(0,50)));let shown=0,fill=0;
   const X=i=>PX0+i*(PX1-PX0)/24,Y=v=>PY1-Math.min(v,MAXV)/MAXV*(PY1-PY0);
   c.every(AF,()=>{
-    hits+=R(1,9)|0;el.querySelector('#hero').innerHTML=seg(84,160,228,pad(hits,7),MNT);el.querySelector('#hd').textContent='▲ 10.0% VS PREV 24H';
+    hits+=R(1,9)|0;el.querySelector('#hero').innerHTML=seg(96,160,228,pad(hits,7),MNT,true,-8);el.querySelector('#hd').textContent='▲ 10.0% VS PREV 24H';
     vals[0]+=Math.random()<.4?1:0;vals[1]=+(vals[1]+R(-.02,.02)).toFixed(2);vals[2]=+(vals[2]+R(-.4,.6)).toFixed(1);
     vals.forEach((v,i)=>{el.querySelector('#kv'+i).innerHTML=seg(1146,112+i*124+40,60,i?v.toFixed(i==1?2:1):String(v),K[i][1]);el.querySelector('#kd'+i).textContent=i==2?'▲ '+(v-35).toFixed(1)+' PTS':'▲ '+(11.7-i).toFixed(1)+'%'});
     el.querySelector('#anom').style.visibility=vals[2]>40?'':'hidden';
@@ -342,7 +408,7 @@ const SCENES=[
 }},
 {name:'SERVICE STATUS',set:'modern',build(el,c){
   const names=['AUTH','API GATEWAY','DATABASE','CDN EDGE','QUEUE','SEARCH','BILLING','MAIL RELAY'];
-  let s=svgTi('hdr',40,130,'ALL SYSTEMS OPERATIONAL',100,MNT,'start',.56)+chainS(1150,40,[['REGION','APAC-2',170],['UPDATED','00:00:00',240,'upd']],AMB,72);
+  let s=svgTi('hdr',40,130,'ALL SYSTEMS OPERATIONAL',100,MNT,'start',.56,-12)+chainS(1150,40,[['REGION','APAC-2',170],['UPDATED','00:00:00',240,'upd']],AMB,72);
   s+=monoT(640,182,'90 DAYS AGO',18,AMB)+monoT(1480,182,'TODAY',18,AMB,'end')+monoT(1560,182,'UPTIME',18,AMB,'end');
   names.forEach((n,i)=>{const y=196+i*80;s+=`<line x1="40" y1="${y+70}" x2="1560" y2="${y+70}" stroke="${AMB}" stroke-width="1" opacity=".3"/>`+svgT(40,y+46,n,34,AMB,'start',.74)+`<g id="st${i}"></g>`;
     for(let j=0;j<90;j++)s+=`<rect class="u${i}" x="${640+j*9.33}" y="${y+12}" width="7" height="46" fill="${MNT}"/>`;s+=monoT(1560,y+44,'99.98%',24,AMB,'end','pc'+i)});
@@ -357,7 +423,7 @@ const SCENES=[
     el.querySelector('#upd').textContent=`00:00:${pad(t*2)}`});
 }},
 {name:'MARKET TERMINAL',set:'modern',build(el,c){
-  let s=svgT(40,150,'KSTL',150,AMB,'start',.56)+svgT(40,196,'KESTREL HYDRO INDUSTRIES · NSE',28,AMB,'start',.74)+`<g id="px"></g>`+svgTi('chg',1240,180,'',40,MNT,'end',.74);
+  let s=svgT(40,150,'KSTL',150,AMB,'start',.56,-12)+svgT(40,196,'KESTREL HYDRO INDUSTRIES · NSE',28,AMB,'start',.74)+`<g id="px"></g>`+svgTi('chg',1240,180,'',40,MNT,'end',.74);
   s+=chamfer(40,230,1200,600,18,AMB,2.5)+gridS(60,250,1160,420,1160/40*5,84,AMB,.2)+tab(70,230,'1 MIN · CANDLE',AMB,22)+`<g id="cs"></g><g id="vol"></g>`+`<line x1="60" y1="690" x2="1220" y2="690" stroke="${AMB}" stroke-width="2"/>`+monoT(70,820,'VOLUME',18,AMB);
   s+=chamfer(1270,230,290,600,18,AMB,2.5)+tab(1295,230,'ORDER BOOK',AMB,22)+`<g id="ob"></g>`;
   const tick=['ORBT ▲1.20','HYDR ▼0.42','KSTL ▲2.31','VSTA ▲0.08','JNUS ▼3.10','ARGS ▲0.77','OSPR ▼0.19','TRIA ▲5.02'].join('   ·   ');
@@ -409,7 +475,7 @@ const SCENES=[
   draw();c.every(AF*2,()=>{t++;if(t%4===0)temp+=pick([-1,0,1]);draw()});
 }},
 {name:'NOW PLAYING',set:'modern',build(el,c){
-  const B=32,SG=16;let s=svgT(40,150,'SIGNAL DECAY',150,AMB,'start',.56)+svgT(40,200,'THE ORBITAL HYDROLOGISTS',36,AMB,'start',.74);
+  const B=32,SG=16;let s=svgT(40,150,'SIGNAL DECAY',150,AMB,'start',.56,-12)+svgT(40,200,'THE ORBITAL HYDROLOGISTS',36,AMB,'start',.74);
   s+=chainS(40,226,[['TRACK','04/11',140],['FORMAT','DAT 48K',190],['BPM','172',120],['KEY','F# MIN',160]],AMB,70);
   s+=chamfer(40,320,1080,450,18,AMB,2.5)+tab(70,320,'SPECTRUM · 32 BAND',AMB,22);
   for(let b=0;b<B;b++)for(let k=0;k<SG;k++)s+=`<rect class="sp" data-b="${b}" data-k="${k}" x="${62+b*32.8}" y="${740-k*25}" width="27" height="20" fill="#120a06"/>`;
@@ -436,7 +502,7 @@ const SCENES=[
   s+=chamfer(1010,140,60,80,10,RED,4,'#000')+svgT(1040,192,'B',40,RED,'middle')+tagS(1040,236,'DEST',22,RED,{anchor:'middle'});
   s+=`<g id="me" class="blink">${diamond(0,0,36,'',MNT,MNT)}</g>`;
   s+=chamfer(1120,40,440,820,20,AMB,3)+chamfer(1150,80,380,300,14,AMB,2)+`<path d="M1250 330 V190 H1400" fill="none" stroke="${AMB}" stroke-width="26"/><polygon points="1450,190 1395,145 1395,235" fill="${AMB}"/>`;
-  s+=svgT(1150,450,'TURN RIGHT',70,AMB,'start',.56)+svgT(1150,490,'ONTO KANAL ST.',30,AMB,'start',.8)+`<g id="dist"></g>`+svgT(1430,640,'KM',44,AMB,'start',.74);
+  s+=svgT(1150,450,'TURN RIGHT',70,AMB,'start',.56,-12)+svgT(1150,490,'ONTO KANAL ST.',30,AMB,'start',.8)+`<g id="dist"></g>`+svgT(1430,640,'KM',44,AMB,'start',.74);
   s+=chainS(1150,690,[['ETA','14:32',180],['REMAIN','12 MIN',200]],AMB,74)+chainS(1150,770,[['UNIT','07',100],['OPERATOR','K.ROSS',280]],SKY,64);
   s+=rulerS(60,40,240,AMB,2,false)+monoT(60,30,'0       250 M     500 M',16,AMB);
   el.innerHTML=sv(s,'#000','',true);drawWires(el,c.every,8);
@@ -524,18 +590,25 @@ const SCENES=[
     el.querySelector('#ps').innerHTML=top.map((p,i)=>monoT(842,590+i*30,`${String(p.pid).padStart(5)}  ${p.n.toUpperCase().padEnd(16)} ${p.cpu.toFixed(1).padStart(5)}  ${String(p.mem).padStart(4)}M`,20,p.cpu>60?RED:i==0?MNT:AMB)).join('')});
 }},
 {name:'AUTHENTICATE (2FA)',set:'modern',build(el,c){
-  const wall=wallHTML('Authorization required',24,'4.2cqw','rgba(255,26,46,.13)','padding:.6cqw;gap:.4cqw 2cqw');
-  let s=chamfer(470,90,660,720,30,AMB,3,'#000')+chamfer(486,106,628,688,22,AMB,1)+tab(520,90,'TERMINAL 07',AMB,24);
-  s+=svgT(800,230,'IDENTIFY',120,AMB,'middle',.56);
-  s+=chainS(540,270,[['OPERATOR','K.ROSS',300],['CLEARANCE','LEVEL 3',220]],AMB,76);
-  s+=svgT(540,410,'ONE-TIME CODE',24,AMB,'start',.84);
-  for(let i=0;i<6;i++)s+=box(540+i*90,430,76,96,AMB,3,'#000')+svgTi('d'+i,578+i*90,500,'',64,AMB,'middle',.9);
-  s+=svgTi('st',800,600,'AWAITING INPUT',40,AMB,'middle',.74)+`<g id="deny" style="visibility:hidden"><g class="strobe">${box(520,630,560,90,RED,4,RED)}${svgT(800,692,'ACCESS DENIED',62,'#000','middle',.6)}</g>${monoT(800,760,'ATTEMPT 3/3 · LOCKOUT 00:05:00',22,RED,'middle')}</g>`;
+  // not a modal: an off-centre terminal. Hero bleeds left, scanner sits right, the verdict is a full-width band.
+  const wall=wallHTML('Authorization required',30,'3.2cqw','rgba(255,26,46,.12)','left:50%;padding:.6cqw;gap:.2cqw 1.6cqw');
+  let s=tagS(40,26,'TERMINAL 07 · LOWER SHAFT',24,AMB)+svgT(-24,300,'IDENTIFY',300,AMB,'start',.56,-12);
+  s+=wire('M40 352 H900',AMB,3)+tab(60,352,'ONE-TIME CODE',AMB,22)+dot(900,352,AMB);
+  for(let i=0;i<6;i++){const x=60+i*124,y=384+i*10;s+=box(x,y,104,128,AMB,3,'#000')+svgTi('d'+i,x+52,y+100,'',92,AMB,'middle',.8,-10)+wire(`M${x+52} ${y+128} V600`,AMB,2)+monoT(x+52,624,'D'+(i+1),18,AMB,'middle')}
+  s+=`<line x1="60" y1="600" x2="740" y2="600" stroke="${AMB}" stroke-width="2"/>`+svgTi('st',60,690,'AWAITING INPUT',40,AMB,'start',.74,-12);
+  // retina scanner
+  s+=brkS(940,60,620,560,AMB,44,3)+monoT(964,100,'RETINA · PASS 2/3',22,AMB);
+  for(let r of [60,110,170,230])s+=`<circle cx="1250" cy="350" r="${r}" fill="none" stroke="${AMB}" stroke-width="${r===60?3:1.2}" opacity="${r===60?1:.6}"/>`;
+  s+=`<line x1="990" y1="350" x2="1510" y2="350" stroke="${AMB}" stroke-width="1" opacity=".6"/><line x1="1250" y1="90" x2="1250" y2="610" stroke="${AMB}" stroke-width="1" opacity=".6"/><g id="sw"><line x1="1250" y1="350" x2="1480" y2="350" stroke="${MNT}" stroke-width="4"/></g><g id="pts"></g>`;
+  s+=chainS(940,640,[['OPERATOR','K.ROSS',300],['CLEARANCE','LEVEL 3',200],['TERM','07',120]],AMB,74);
+  s+=`<g id="deny" style="visibility:hidden"><rect x="0" y="738" width="1600" height="112" fill="${RED}"/><g class="strobe">${svgT(40,830,'ACCESS DENIED',112,'#000','start',.56,-12)}</g>${mincT(1560,826,'否認',96,'#000','end')}${monoT(40,884,'ATTEMPT 3/3 · LOCKOUT 00:05:00 · INCIDENT LOGGED',22,RED)}</g>`;
   el.innerHTML=`<div class="fill" style="background:#000;overflow:hidden">${wall}</div>`+sv(s,'transparent');
-  let t=0;const st=el.querySelector('#st');
-  c.every(AF,()=>{t++;if(t<=6){el.querySelector('#d'+(t-1)).textContent=String(R(0,10)|0)}
+  let t=0;const st=el.querySelector('#st'),sw=el.querySelector('#sw'),pts=el.querySelector('#pts');
+  c.every(AF,()=>{t++;sw.setAttribute('transform',`rotate(${t*30} 1250 350)`);
+    pts.innerHTML=Array.from({length:8},()=>{const a=R(0,6.28),r=R(20,220);return `<rect x="${1250+Math.cos(a)*r-4}" y="${350+Math.sin(a)*r-4}" width="8" height="8" fill="${MNT}"/>`}).join('');
+    if(t<=6){el.querySelector('#d'+(t-1)).textContent=String(R(0,10)|0)}
     else if(t<=9){st.textContent='VERIFYING'+'.'.repeat(t-6);st.classList.add('blink')}
-    else if(t===10){st.textContent='';el.querySelector('#deny').style.visibility='';for(let i=0;i<6;i++)el.querySelector('#d'+i).setAttribute('fill',RED)}});
+    else if(t===10){st.textContent='';st.classList.remove('blink');el.querySelector('#deny').style.visibility='';for(let i=0;i<6;i++)el.querySelector('#d'+i).setAttribute('fill',RED)}});
 }},
 {name:'SCHEDULE (CALENDAR)',set:'modern',build(el,c){
   // departure-board timeline: days are rows, hours are columns, amber only
