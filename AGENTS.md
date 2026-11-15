@@ -30,7 +30,8 @@ Instructions for coding agents. Machine-readable source of truth: [`signal90/gui
 - **Texture.** A word wall or dump text behind the hero.
 - **Motion on the anime frame.** `AF` = 83.333 ms. `steps()`, never ease. Strobe (12 Hz, 42% afterimage) is for critical states only; use `.blink` for status.
 - **Asymmetric, never modal.** Heroes bleed off an edge; frames get one cut corner or an open side. Overlap only across open edges or bands. No centred dialog boxes.
-- **Oblique accents.** `.obl` (skewX -12°) on 1–2 hero words or warnings per screen.
+- **Oblique is rare.** At most one slanted 7-seg hero readout per screen (`.obl-seg`, `seg(…,-8)`). Titles, warnings and labels stay upright.
+- **Cheap VFX.** Glow on; RGB split off by default and never on small screens (SVG filters are CPU work in Safari). Scenes get `pointer-events:none`; pause off-screen screens. See `guide.json → vfx.performance`.
 - **No rounded corners, drop shadows, glass, icon fonts or emoji.**
 - **Original copy only.** No real shows, brands or characters.
 

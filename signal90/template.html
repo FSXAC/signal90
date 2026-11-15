@@ -12,7 +12,8 @@
   html,body{margin:0;background:var(--void);color:var(--amber)}
   /* 2. a screen = 16:9 container, everything inside sized in cqw */
   .screen{position:relative;width:min(100vw - 32px,1280px);margin:16px auto;aspect-ratio:16/9;overflow:hidden;container-type:inline-size;background:var(--void)}
-  .screen.ca{filter:url(#rgbsplit)}
+  .screen.ca{filter:url(#rgbsplit)} /* opt-in: add class ca; CPU-heavy in Safari */
+  .screen>*{pointer-events:none}
 </style>
 </head>
 <body>
@@ -20,15 +21,15 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="sglow" x="-3%" y="-3%" width="106%" height="106%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   <filter id="rgbsplit" x="-2%" y="0" width="104%" height="100%" color-interpolation-filters="sRGB">
-    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/><feOffset in="r" dx="2.2" result="r2"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/><feOffset in="r" dx="1" result="r2"/>
     <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
-    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/><feOffset in="b" dx="-2.2" result="b2"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/><feOffset in="b" dx="-1" result="b2"/>
     <feBlend in="r2" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b2" mode="screen"/>
   </filter>
 </svg>
 
 <!-- Example A: HTML screen (tags, chain, 7-seg, strobe, wall) -->
-<div class="screen ca" id="a">
+<div class="screen" id="a">
   <div class="abs wall" style="inset:0;color:rgba(255,26,46,.12);gap:0 1.2cqw">REPLACE_WALL</div>
   <div class="abs chain glow" style="left:2.5cqw;top:2.5cqw;font-size:2.2cqw">
     <div class="cell"><small class="hx">Node</small><span class="cond">KESTREL-07</span></div>
@@ -45,7 +46,7 @@
 </div>
 
 <!-- Example B: SVG screen (1600×900) with frames, tabs, wires, LED meter -->
-<div class="screen ca" id="b"></div>
+<div class="screen" id="b"></div>
 
 <script src="signal90.js"></script>
 <script>

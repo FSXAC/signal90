@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Shippori+Mincho+B1:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="signal90/signal90.css?v=0.5">
+<link rel="stylesheet" href="signal90/signal90.css?v=0.6">
 <style>
 /* ---------- page chrome ---------- */
 .mast{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:28px 0 14px;border-bottom:1px solid var(--page-rule);flex-wrap:wrap}
@@ -18,7 +18,14 @@
 .stage-wrap{margin:18px 0 0}
 .stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--void);overflow:hidden;container-type:inline-size;isolation:isolate;border:1px solid #1d1512}
 .scene{position:absolute;inset:0;overflow:hidden}
+.stage{contain:layout paint style}
+/* scenes are pictures, not UI: skip hit-testing, keep repaints inside the stage's own layer */
+.scene{pointer-events:none;contain:strict;will-change:transform}
 .stage.ca .scene{filter:url(#rgbsplit)}
+/* small screens: no RGB split, no SVG bloom (both are CPU filters on mobile Safari and smear small type) */
+@media (max-width:700px){.stage.ca .scene{filter:none}.stage svg g[filter]{filter:none}}
+/* off-screen doc sections skip layout and paint entirely */
+section{content-visibility:auto;contain-intrinsic-size:auto 1100px}
 .fx{position:absolute;inset:0;pointer-events:none;z-index:20}
 .fx-scan{background:repeating-linear-gradient(180deg,transparent 0 1px,rgba(0,0,0,.38) 1px 3px);mix-blend-mode:multiply}
 .fx-vig{background:radial-gradient(120% 95% at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%)}
@@ -81,10 +88,10 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="rgbsplit" x="-2%" y="0" width="104%" height="100%" color-interpolation-filters="sRGB">
     <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
-    <feOffset in="r" dx="2.2" dy="0" result="r2"/>
+    <feOffset id="ca-r" in="r" dx="1" dy="0" result="r2"/>
     <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
     <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
-    <feOffset in="b" dx="-2.2" dy="0" result="b2"/>
+    <feOffset id="ca-b" in="b" dx="-1" dy="0" result="b2"/>
     <feBlend in="r2" in2="g" mode="screen" result="rg"/>
     <feBlend in="rg" in2="b2" mode="screen"/>
   </filter>
@@ -94,14 +101,14 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
 <div class="wrap">
   <header class="mast">
     <div>
-      <div style="margin-bottom:10px"><span class="jp">信号</span><span class="mono" style="color:var(--page-dim);font-size:12px">DESIGN SYSTEM // REV 0.5 // CASSETTE-FUTURISM</span></div>
+      <div style="margin-bottom:10px"><span class="jp">信号</span><span class="mono" style="color:var(--page-dim);font-size:12px">DESIGN SYSTEM // REV 0.6 // CASSETTE-FUTURISM</span></div>
       <h1 class="tall glow">Signal<b>/</b>90</h1>
     </div>
     <p class="sub">Emissive type on a dead-black tube. Flat screens, boxed labels, stretched Helvetica, alarms that strobe on the anime frame. Studied from a 305-second, 608-cut supercut of late-90s anime command-center graphics. Everything below is original.</p>
   </header>
 
   <div class="stage-wrap">
-    <div class="stage ca" id="stage">
+    <div class="stage" id="stage">
       <div class="scene" id="scene"></div>
       <canvas class="fx fx-grain" id="grain" width="320" height="180" style="display:none"></canvas>
       <div class="fx fx-scan" id="fxscan" style="display:none"></div>
@@ -120,7 +127,7 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
       <button class="btn" id="s-reset" style="padding:2px 8px">Reset</button>
       <label><input type="checkbox" id="o-scan"> Scanlines</label>
       <label><input type="checkbox" id="o-grain"> Grain</label>
-      <label><input type="checkbox" id="o-ca" checked> RGB split</label>
+      <label><input type="checkbox" id="o-ca"> RGB split</label>
       <label><input type="checkbox" id="o-flick"> Flicker</label>
       <label><input type="checkbox" id="o-tear"> Tear</label>
       <span class="readout" id="readout">SHOT 01/17</span>
@@ -175,7 +182,7 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
         <code>grain</code> 320×180 noise at 24 fps, screen, 13%<br>
         <code>tear</code> a 1-frame horizontal signal offset every ~5 s<br>
         <code>flicker</code> 1-frame brightness drops at 80–93%<br>
-        <code>rgb split</code> R +2.2px / B −2.2px, screen recombine<br>
+        <code>rgb split</code> off by default; R/B offset ≈0.07% of stage width, screen recombine, never below 700 px<br>
         <code>glow</code> text-shadow: 0.06em currentColor + 0.35em at 55%</p>
         <p>These are tube and signal artefacts, not camera effects. Toggle each one on the reel.</p></div>
       <div class="card"><h3 class="cond">Layout rules</h3>
@@ -191,7 +198,7 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
         <b>Walls of text.</b> Repeat one intimidating word until it becomes texture, or fill the field with dense dump text (hex, logs, binary) behind the hero. Edge columns of binary make good side rails.<br>
         <b>Asymmetric, never modal.</b> Heroes sit off-centre or bleed off an edge. Frames get one cut corner, an open side or a tab, not four matching corners. No centred dialog boxes; verdicts are full-width bands.<br>
         <b>Overlap on purpose.</b> Digits and hero words may run out past an open frame side or across a band. Never just past a closed, symmetric box: that reads as a bug.<br>
-        <b>Oblique accents.</b> <code>.obl</code> slants 1–2 hero words or warnings per screen by −12°. Never on body data.<br>
+        <b>Oblique is rare.</b> Only a 7-segment hero readout may slant (<code>.obl-seg</code>, <code>seg(…,-8)</code>), at most one per screen. Titles, warnings and labels stay upright.<br>
         <b>One idea per shot.</b> Ornament and walls are the background. One hero word or one hero number sits on top.</p></div>
     </div>
   </section>
@@ -215,12 +222,12 @@ footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
     <p class="lede">The souvenir shelf: eight contact sheets (236 mid-shot frames, read left→right) and eight frame strips sampled across single shots. The files sit in <code>reference/</code>. Click to enlarge.</p>
     <div class="grid g2 archive" id="archive"></div>
   </section>
-  <footer>SIGNAL/90 rev 0.5 · press C to show reel controls · reference frames are for private study only · all scene copy, names and emblems in the reel are original</footer>
+  <footer>SIGNAL/90 rev 0.6 · press C to show reel controls · reference frames are for private study only · all scene copy, names and emblems in the reel are original</footer>
 </div>
 <div class="lightbox" id="lb"><img alt=""></div>
 
-<script src="signal90/signal90.js?v=0.5"></script>
-<script src="scenes.js?v=0.5"></script>
+<script src="signal90/signal90.js?v=0.6"></script>
+<script src="scenes.js?v=0.6"></script>
 <script>
 
 /* ============================================================
@@ -260,15 +267,27 @@ tuneStrobe();
 tog('#o-scan',v=>$('#fxscan').style.display=v?'':'none');
 tog('#o-grain',v=>$('#grain').style.display=v?'':'none');
 tog('#o-ca',v=>stage.classList.toggle('ca',v));
+// RGB split offset follows the stage size (≈0.9 px on a 1280 px stage) instead of a fixed 2.2 px
+const caSize=()=>{const d=Math.max(.4,stage.clientWidth*.0007).toFixed(2);$('#ca-r').setAttribute('dx',d);$('#ca-b').setAttribute('dx',-d)};
+caSize();addEventListener('resize',caSize);
 tog('#o-flick',v=>stage.classList.toggle('flicker',v));
 tog('#o-tear',v=>stage.classList.toggle('tear',v));
 (()=>{const cv=$('#grain'),g=cv.getContext('2d');const id=g.createImageData(cv.width,cv.height);
   setInterval(()=>{if(cv.style.display==='none')return;const d=id.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}g.putImageData(id,0,0)},FR)})();
-new IntersectionObserver(es=>{if(!es[0].isIntersecting){clearTimeout(cutTimer);if(S)S.kill()}else go(idx)}).observe(stage);
+// only run the reel while it is on screen and the tab is visible
+let onScreen=true;
+const pauseReel=()=>{clearTimeout(cutTimer);if(S){S.kill();S=null}};
+new IntersectionObserver(es=>{onScreen=es[0].isIntersecting;if(!onScreen)pauseReel();else if(!document.hidden)go(idx)}).observe(stage);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseReel();else if(onScreen)go(idx)});
 
 /* ============================================================
    docs
    ============================================================ */
+// doc demos tick only while some doc section is on screen and the tab is visible
+let docsOn=false;const docVis=new Set();
+const docIO=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?docVis.add(e.target):docVis.delete(e.target));docsOn=docVis.size>0});
+document.querySelectorAll('section').forEach(x=>docIO.observe(x));
+const docEvery=(fn,ms)=>setInterval(()=>{if(docsOn&&!document.hidden)fn()},ms);
 const COLORS=[['--void','#050404','Void','Base field. Never pure #000.'],['--red','#ff1a2e','Signal Red','Fault, deny, danger. The only colour that strobes.'],['--red-deep','#7a0612','Red Deep','Behind kanji bands, alarm fields.'],['--amber','#ff8a1c','Amber','Neutral data: labels, rules, readouts.'],['--phosphor','#39ff6a','Phosphor','Wireframe, topo, terminal.'],['--mint','#7df5b4','Mint','Nominal / approve / filled cell.'],['--sky','#a8c8f2','Sky','Inert panels, the third voter.'],['--hazard','#ffd21a','Hazard','Stripe pairs only, never text.'],['--magenta','#ff2f8e','Magenta','Interference, wave overlays.'],['--violet','#6e3cff','Violet','Spectrum floor, deep scans.'],['--doc-blue','#2a2ed6','Doc Blue','Clearance cards, documents.'],['--paper','#e8ebe2','Paper','Inverse LCD screens (clocks).']];
 $('#swatches').innerHTML=COLORS.map(([v,h,n,u])=>`<div><div class="sw" style="background:${h};${h==='#050404'?'border:1px solid #2a201c':''}"><span>${n}</span></div><div class="swatch-meta"><b>${v}</b> ${h}<br>${u}</div></div>`).join('');
 
@@ -282,7 +301,7 @@ $('#typespec').innerHTML=[
  ['Data · mono','Share Tech Mono, terminal dumps only.',`<div class="mono glow" style="color:var(--amber);font-size:15px;line-height:1.35">FILE : TRIAD_SYS &nbsp; EXTENTION : 4096<br>EX_MODE : OFF &nbsp; PRIORITY : AAA</div>`],
  ['Numerals','7-segment SVG, ghost segments at 8%.',`<span style="font-size:72px;color:#ff6a1a" class="glow" id="specseg"></span>`]
 ].map(([k,m,s])=>`<div class="spec"><div><div class="k">${k}</div><div style="font-size:11px;color:#6b605a;margin-top:4px">${m}</div></div><div style="overflow:hidden">${s}</div></div>`).join('');
-setInterval(()=>{const d=new Date();$('#specseg').innerHTML=seg7(`${pad(d.getMinutes())}:${pad(d.getSeconds())}:${pad(d.getMilliseconds()/10)}`)},FR);
+docEvery(()=>{const d=new Date();$('#specseg').innerHTML=seg7(`${pad(d.getMinutes())}:${pad(d.getSeconds())}:${pad(d.getMilliseconds()/10)}`)},FR);
 
 const comps=[
  ['Tag','<code>.tag</code> <code>.dbl</code> <code>.solid</code>. A hairline-boxed label with stretched text inside. Place it in a corner.',`<div style="display:flex;gap:10px;flex-wrap:wrap"><span class="tag glow" style="color:var(--amber);font-size:18px">Live</span><span class="tag dbl glow" style="color:var(--red);font-size:18px">Unknown</span><span class="tag solid" style="color:var(--mint);font-size:18px">Open</span></div>`],
@@ -303,20 +322,20 @@ $('#comps').innerHTML=comps.map(([n,d,demo])=>`<div class="card"><h3 class="cond
   sv.innerHTML=chamfer(4,8,84,44,8,A,2)+svgT(46,36,'NODE A',16,A,'middle')+chamfer(212,8,84,44,8,M,2)+svgT(254,36,'NODE B',16,M,'middle')
    +wire('M88 30 H150 V22 H212',A,2)+dot(88,30,A,3.5)+dot(212,22,A,3.5)
    +`<rect x="4" y="74" width="110" height="12" fill="${A}"/>`+wire('M114 80 H160',A,2)+`<rect x="160" y="76" width="8" height="8" fill="${A}"/>`+`<text x="174" y="85" fill="${A}" font-family="Share Tech Mono" font-size="13">00231</text>`;
-  const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=setInterval(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();setInterval(run,2600)})();
+  const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=docEvery(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();docEvery(run,2600)})();
 (()=>{const w=$('#cwall');w.innerHTML=Array(14).fill('<span class="tall glow">Denied</span>').join('');const ws=[...w.children];
-  setInterval(()=>{ws.forEach(x=>x.classList.remove('strobe'));pick(ws).classList.add('strobe')},AF*2);
-  const d=$('#cdump');const b=Array.from({length:5},()=>dumpLine(1));setInterval(()=>{b.shift();b.push(dumpLine(pick([0,1])));d.textContent=b.join('\n')},AF)})();
-setInterval(()=>{const r=(Date.now()/10)%6000;$('#cseg').innerHTML=seg7(`${pad(r/6000)}:${pad(r/100%60)}:${pad(r%100)}`)},FR);
+  docEvery(()=>{ws.forEach(x=>x.classList.remove('strobe'));pick(ws).classList.add('strobe')},AF*2);
+  const d=$('#cdump');const b=Array.from({length:5},()=>dumpLine(1));docEvery(()=>{b.shift();b.push(dumpLine(pick([0,1])));d.textContent=b.join('\n')},AF)})();
+docEvery(()=>{const r=(Date.now()/10)%6000;$('#cseg').innerHTML=seg7(`${pad(r/6000)}:${pad(r/100%60)}:${pad(r%100)}`)},FR);
 (()=>{const m=$('#cmeter');const n=18;for(let i=0;i<n;i++)m.insertAdjacentHTML('beforeend','<div style="flex:1;background:linear-gradient(#7df5b4,#1d7a3e);height:0"></div>');const ds=[...m.children];let h=Array(n).fill(0),hold=0;
-  setInterval(()=>{let full=true;ds.forEach((d,i)=>{const t=Math.round((30+60*Math.abs(Math.sin(i*.5)))/16)*16;if(h[i]<t){full=false;if(Math.random()>.25)h[i]+=16}d.style.height=Math.min(h[i],100)+'%'});if(full&&++hold>18){hold=0;h=h.map(()=>0)}},AF)})();
+  docEvery(()=>{let full=true;ds.forEach((d,i)=>{const t=Math.round((30+60*Math.abs(Math.sin(i*.5)))/16)*16;if(h[i]<t){full=false;if(Math.random()>.25)h[i]+=16}d.style.height=Math.min(h[i],100)+'%'});if(full&&++hold>18){hold=0;h=h.map(()=>0)}},AF)})();
 (()=>{const s=$('#chex');let p='';const cells=[];for(let y=0;y<6;y++)for(let x=0;x<22;x++){const cx=x*10+(y%2?5:0)+5,cy=y*14+8;let pts='';for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30);pts+=`${(cx+5.4*Math.cos(a)).toFixed(1)},${(cy+5.4*Math.sin(a)).toFixed(1)} `}p+=`<polygon points="${pts}" fill="var(--mint)"/>`;cells.push(cy)}
   s.innerHTML=p;const ps=[...s.children];let ord=[],n=0,hold=0;const reset=()=>{ps.forEach(e=>e.setAttribute('fill','var(--mint)'));ord=cells.map((y,i)=>({i,k:-y+R(0,30)})).sort((a,b)=>a.k-b.k);n=0};reset();
-  setInterval(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ps[ord[n++].i].setAttribute('fill','var(--red)')}else if(++hold>18){hold=0;reset()}},AF)})();
+  docEvery(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ps[ord[n++].i].setAttribute('fill','var(--red)')}else if(++hold>18){hold=0;reset()}},AF)})();
 (()=>{const t=$('#ctri');['ARGUS·1','VESTA·2','JANUS·3'].forEach((n,i)=>t.insertAdjacentHTML('beforeend',`<div data-c="${i==1?'var(--sky)':'var(--mint)'}" style="flex:1;background:${i==1?'var(--sky)':'var(--mint)'};clip-path:polygon(0 0,100% 0,100% 75%,50% 100%,0 75%);padding:6px 8px;color:#063"><span class="cond" style="font-size:16px">${n}</span><div class="mincho st" style="font-size:20px">承認</div></div>`));const ps=[...t.children];
-  setInterval(()=>{const p=pick(ps);const ok=Math.random()>.5;p.style.background=ok?p.dataset.c:'var(--red)';const st=p.querySelector('.st');st.textContent=ok?'承認':'否定';st.classList.toggle('strobe',!ok);p.style.color=ok?'#063':'#fff'},AF*3)})();
+  docEvery(()=>{const p=pick(ps);const ok=Math.random()>.5;p.style.background=ok?p.dataset.c:'var(--red)';const st=p.querySelector('.st');st.textContent=ok?'承認':'否定';st.classList.toggle('strobe',!ok);p.style.color=ok?'#063':'#fff'},AF*3)})();
 (()=>{const c=$('#cx');let h='';for(let y=1;y<4;y++)for(let x=1;x<8;x++)h+=`<span style="position:absolute;left:${x*12.5}%;top:${y*25}%;width:12px;height:12px;transform:translate(-50%,-50%);background:linear-gradient(#fff,#fff) 50% 0/1.5px 100% no-repeat,linear-gradient(#fff,#fff) 0 50%/100% 1.5px no-repeat"></span>`;h+=`<span id="cxm" class="mono" style="position:absolute;color:var(--red);font-size:20px;transform:translate(-50%,-50%)">×</span><span class="tag" style="position:absolute;left:6px;top:6px;color:#fff;font-size:11px">Object: 15</span>`;c.innerHTML=h;
-  setInterval(()=>{const m=$('#cxm');m.style.left=(12.5*(1+Math.floor(R(0,7))))+'%';m.style.top=(25*(1+Math.floor(R(0,3))))+'%'},AF*5)})();
+  docEvery(()=>{const m=$('#cxm');m.style.left=(12.5*(1+Math.floor(R(0,7))))+'%';m.style.top=(25*(1+Math.floor(R(0,3))))+'%'},AF*5)})();
 
 const motion=[
  ['Hard cut','0 ms · shots of 6–13 anime frames','The only transition. No dissolves, slides or flash frames between shots.','cut'],
@@ -339,24 +358,24 @@ const motion=[
  ['Stutter / repeat edit','1–3 AF switches · replay a shot','Flick between near-identical variants, or play a shot twice back to back.','stutter']];
 $('#motion').innerHTML=motion.map(([n,t,d,k])=>`<div class="card"><h3 class="cond">${n}</h3><div class="mono" style="color:var(--mint);font-size:12px">${t}</div><div class="mdemo" data-k="${k}" style="height:70px;margin:10px 0;background:#000;position:relative;overflow:hidden"></div><p>${d}</p></div>`).join('');
 document.querySelectorAll('.mdemo').forEach(m=>{const k=m.dataset.k;
-  const restart=(sel,ms)=>setInterval(()=>{const e=m.querySelector(sel);e.style.animation='none';void e.offsetWidth;e.style.animation=''},ms);
-  if(k==='wire'){m.innerHTML=`<svg viewBox="0 0 300 70" style="width:100%;height:100%">${chamfer(8,18,60,34,6,'var(--amber)',2)}${chamfer(232,18,60,34,6,'var(--amber)',2)}${wire('M68 35 H120 V12 H180 V35 H232','var(--amber)',2)}</svg>`;const sv=m.firstChild;const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=setInterval(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();setInterval(run,1800)}
-  if(k==='overwrite'){const rows=[...Array(6)].map(()=>dumpLine(1).slice(0,40));let n=0;setInterval(()=>{n=(n+1)%10;m.innerHTML=`<div class="mono" style="padding:4px 8px;font-size:10px;line-height:11px;color:var(--amber)">${rows.map((r,i)=>i<n?'<div style="background:var(--red);color:#000">DELETED DELETED DELETED DELETED</div>':`<div>${r}</div>`).join('')}</div>`},AF)}
-  if(k==='infect'||k==='erode'){const C=36,Rw=8;m.innerHTML=`<div style="display:grid;grid-template-columns:repeat(${C},1fr);height:100%;padding:4px">${Array(C*Rw).fill(`<i style="background:${k==='infect'?'var(--red)':'#e2702a'};border:1px solid #000"></i>`).join('')}</div>`;const is=[...m.querySelectorAll('i')];let sp,t=0;const rs=()=>{sp=spreader(C,Rw,k==='infect'?[[0,Rw-1]]:[[8,3],[26,5]]);is.forEach(e=>e.style.background=k==='infect'?'var(--red)':'#e2702a');t=0};rs();setInterval(()=>{if(++t>22)return rs();sp.tick(18).forEach(i=>is[i]&&(is[i].style.background=k==='infect'?'var(--sky)':'#050404'))},AF)}
-  if(k==='scramble'){m.innerHTML='<div class="fill center mono" style="color:#fff;font-size:20px;gap:2px"><div></div><div></div></div>';const d=m.querySelectorAll('.fill div');setInterval(()=>{d[0].textContent=scramble()+'   '+scramble();d[1].textContent=scramble()+'   '+scramble()},AF*2)}
-  if(k==='assemble'){m.innerHTML=`<svg viewBox="0 0 300 70" style="width:100%;height:100%">${Array.from({length:10},(_,b)=>`<polygon class="ab" points="${20+b*26},62 ${40+b*26},8 ${50+b*26},8 ${30+b*26},62" fill="var(--mint)" style="visibility:hidden"/>`).join('')}</svg>`;const bs=[...m.querySelectorAll('.ab')];let n=0;setInterval(()=>{n=(n+1)%16;bs.forEach((b,i)=>b.style.visibility=i<n?'visible':'hidden')},AF)}
-  if(k==='scribble'){m.innerHTML='<svg viewBox="0 0 300 70" style="width:100%;height:100%"><polyline fill="none" stroke="#f2e9a0" stroke-width="1.2"/></svg>';const pl=m.querySelector('polyline');setInterval(()=>{const a=R(1,4),b=R(1,4);pl.setAttribute('points',Array.from({length:120},(_,i)=>{const u=i/120*25;return `${150+Math.sin(a*u)*120+R(-10,10)},${35+Math.sin(b*u)*28+R(-4,4)}`}).join(' '))},AF)}
-  if(k==='spin'){m.innerHTML='<div class="fill center"><div style="width:120px;height:14px;background:var(--mint)"></div></div>';const g=m.querySelector('.fill div');let t=0;setInterval(()=>{t=(t+1)%14;g.style.visibility=t<4?'visible':'hidden';g.style.transform=`rotate(${t*45}deg)`},AF)}
-  if(k==='stutter'){m.innerHTML='<div class="fill center"><span class="tall glow" style="font-size:40px;color:var(--amber)">Shot A</span></div>';const e=m.querySelector('.tall');const seq=['A','A','B','A','B','B','C','C','C','C'];let i=0;setInterval(()=>{e.textContent='Shot '+seq[i++%seq.length];m.style.background=seq[(i-1)%seq.length]==='B'?'#1a0606':'#000'},AF*2)}
+  const restart=(sel,ms)=>docEvery(()=>{const e=m.querySelector(sel);e.style.animation='none';void e.offsetWidth;e.style.animation=''},ms);
+  if(k==='wire'){m.innerHTML=`<svg viewBox="0 0 300 70" style="width:100%;height:100%">${chamfer(8,18,60,34,6,'var(--amber)',2)}${chamfer(232,18,60,34,6,'var(--amber)',2)}${wire('M68 35 H120 V12 H180 V35 H232','var(--amber)',2)}</svg>`;const sv=m.firstChild;const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=docEvery(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();docEvery(run,1800)}
+  if(k==='overwrite'){const rows=[...Array(6)].map(()=>dumpLine(1).slice(0,40));let n=0;docEvery(()=>{n=(n+1)%10;m.innerHTML=`<div class="mono" style="padding:4px 8px;font-size:10px;line-height:11px;color:var(--amber)">${rows.map((r,i)=>i<n?'<div style="background:var(--red);color:#000">DELETED DELETED DELETED DELETED</div>':`<div>${r}</div>`).join('')}</div>`},AF)}
+  if(k==='infect'||k==='erode'){const C=36,Rw=8;m.innerHTML=`<div style="display:grid;grid-template-columns:repeat(${C},1fr);height:100%;padding:4px">${Array(C*Rw).fill(`<i style="background:${k==='infect'?'var(--red)':'#e2702a'};border:1px solid #000"></i>`).join('')}</div>`;const is=[...m.querySelectorAll('i')];let sp,t=0;const rs=()=>{sp=spreader(C,Rw,k==='infect'?[[0,Rw-1]]:[[8,3],[26,5]]);is.forEach(e=>e.style.background=k==='infect'?'var(--red)':'#e2702a');t=0};rs();docEvery(()=>{if(++t>22)return rs();sp.tick(18).forEach(i=>is[i]&&(is[i].style.background=k==='infect'?'var(--sky)':'#050404'))},AF)}
+  if(k==='scramble'){m.innerHTML='<div class="fill center mono" style="color:#fff;font-size:20px;gap:2px"><div></div><div></div></div>';const d=m.querySelectorAll('.fill div');docEvery(()=>{d[0].textContent=scramble()+'   '+scramble();d[1].textContent=scramble()+'   '+scramble()},AF*2)}
+  if(k==='assemble'){m.innerHTML=`<svg viewBox="0 0 300 70" style="width:100%;height:100%">${Array.from({length:10},(_,b)=>`<polygon class="ab" points="${20+b*26},62 ${40+b*26},8 ${50+b*26},8 ${30+b*26},62" fill="var(--mint)" style="visibility:hidden"/>`).join('')}</svg>`;const bs=[...m.querySelectorAll('.ab')];let n=0;docEvery(()=>{n=(n+1)%16;bs.forEach((b,i)=>b.style.visibility=i<n?'visible':'hidden')},AF)}
+  if(k==='scribble'){m.innerHTML='<svg viewBox="0 0 300 70" style="width:100%;height:100%"><polyline fill="none" stroke="#f2e9a0" stroke-width="1.2"/></svg>';const pl=m.querySelector('polyline');docEvery(()=>{const a=R(1,4),b=R(1,4);pl.setAttribute('points',Array.from({length:120},(_,i)=>{const u=i/120*25;return `${150+Math.sin(a*u)*120+R(-10,10)},${35+Math.sin(b*u)*28+R(-4,4)}`}).join(' '))},AF)}
+  if(k==='spin'){m.innerHTML='<div class="fill center"><div style="width:120px;height:14px;background:var(--mint)"></div></div>';const g=m.querySelector('.fill div');let t=0;docEvery(()=>{t=(t+1)%14;g.style.visibility=t<4?'visible':'hidden';g.style.transform=`rotate(${t*45}deg)`},AF)}
+  if(k==='stutter'){m.innerHTML='<div class="fill center"><span class="tall glow" style="font-size:40px;color:var(--amber)">Shot A</span></div>';const e=m.querySelector('.tall');const seq=['A','A','B','A','B','B','C','C','C','C'];let i=0;docEvery(()=>{e.textContent='Shot '+seq[i++%seq.length];m.style.background=seq[(i-1)%seq.length]==='B'?'#1a0606':'#000'},AF*2)}
   if(k==='strobe')m.innerHTML=`<div class="fill center"><span class="tag strobe" style="color:var(--red);font-size:24px">Alert</span></div>`;
   if(k==='strobein'){m.innerHTML=`<div class="fill center"><span class="wide glow strobe-in" data-o="c" style="color:var(--red);font-size:40px">Keep out</span></div>`;restart('.strobe-in',2000)}
   if(k==='blink')m.innerHTML=`<div class="fill center"><span class="tag blink" style="color:var(--amber);font-size:20px">Analyzing</span></div>`;
   if(k==='flick'){m.innerHTML=`<div class="fill center"><div class="flick-on"><span class="tall glow" style="color:var(--mint);font-size:60px">Oracle</span></div></div>`;restart('.flick-on',1500)}
   if(k==='marq'){const w='<span class="tall glow" style="padding-right:24px">Emergency</span>';m.innerHTML=`<div class="fill" style="display:flex;align-items:center;overflow:hidden"><div class="marq" style="color:#ff5a1f;font-size:64px;animation:marq 2.6s linear infinite">${w}${w}${w}${w}</div></div>`}
-  if(k==='tick'){m.innerHTML=`<div class="fill center mono glow" style="color:var(--amber);font-size:26px"></div>`;const e=m.firstChild;const t0=performance.now();setInterval(()=>e.textContent=timecode(performance.now()-t0),FR)}
-  if(k==='cut'){const cs=['var(--red)','#000','var(--mint)','var(--doc-blue)'];let i=0;setInterval(()=>{m.style.background=cs[i++%4]},AF*9)}
-  if(k==='sweep'){m.innerHTML=`<div style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;padding:6px;height:100%">${Array(96).fill('<i style="background:var(--mint)"></i>').join('')}</div>`;const is=[...m.querySelectorAll('i')];let ord=[],n=0,hold=0;const rs=()=>{is.forEach(e=>e.style.background='var(--mint)');ord=is.map((e,i)=>({e,k:-Math.floor(i/24)*10+R(0,14)})).sort((a,b)=>a.k-b.k);n=0};rs();setInterval(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ord[n++].e.style.background='var(--red)'}else if(++hold>12){hold=0;rs()}},AF)}
-  if(k==='step'){m.innerHTML=`<div style="position:absolute;left:8px;right:8px;bottom:8px;height:16px;background:#1a110c"><div style="height:100%;width:0;background:var(--mint)"></div></div>`;const b=m.querySelector('div>div');let w=0,hold=0;setInterval(()=>{if(w<100){if(Math.random()>.25)w+=16}else if(++hold>10){hold=0;w=0}b.style.width=Math.min(w,100)+'%'},AF)}
+  if(k==='tick'){m.innerHTML=`<div class="fill center mono glow" style="color:var(--amber);font-size:26px"></div>`;const e=m.firstChild;const t0=performance.now();docEvery(()=>e.textContent=timecode(performance.now()-t0),FR)}
+  if(k==='cut'){const cs=['var(--red)','#000','var(--mint)','var(--doc-blue)'];let i=0;docEvery(()=>{m.style.background=cs[i++%4]},AF*9)}
+  if(k==='sweep'){m.innerHTML=`<div style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;padding:6px;height:100%">${Array(96).fill('<i style="background:var(--mint)"></i>').join('')}</div>`;const is=[...m.querySelectorAll('i')];let ord=[],n=0,hold=0;const rs=()=>{is.forEach(e=>e.style.background='var(--mint)');ord=is.map((e,i)=>({e,k:-Math.floor(i/24)*10+R(0,14)})).sort((a,b)=>a.k-b.k);n=0};rs();docEvery(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ord[n++].e.style.background='var(--red)'}else if(++hold>12){hold=0;rs()}},AF)}
+  if(k==='step'){m.innerHTML=`<div style="position:absolute;left:8px;right:8px;bottom:8px;height:16px;background:#1a110c"><div style="height:100%;width:0;background:var(--mint)"></div></div>`;const b=m.querySelector('div>div');let w=0,hold=0;docEvery(()=>{if(w<100){if(Math.random()>.25)w+=16}else if(++hold>10){hold=0;w=0}b.style.width=Math.min(w,100)+'%'},AF)}
 });
 
 const sheets=[1,2,3,4,5,6,7,8].map(n=>[`reference/contact-sheets/s_0${n}.jpg`,`Contact sheet ${n}/8 · shots ${(n-1)*30+1}–${Math.min(n*30,236)}`]);

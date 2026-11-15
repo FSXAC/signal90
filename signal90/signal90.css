@@ -66,6 +66,8 @@ body{font:15px/1.5 var(--f-mono);-webkit-font-smoothing:antialiased}
 @keyframes strobeinv{0%{color:var(--a);background:var(--b)}50%{color:var(--b);background:var(--a);opacity:calc(.5 + var(--strobe-off) / 2)}}
 /* strobe-in: 4 strobe cycles (≈0.67s), then holds on */
 .strobe-in{animation:strobe var(--strobe) 4 steps(1,end)}
+/* keep strobing text on a fixed layer: adding/removing a layer mid-shot re-rasterises scaleX text at a new sub-pixel offset (visible jitter) */
+.strobe-in,.wall>*{will-change:opacity}
 /* BLINK — non-critical status (ANALYZING, REC): 4 frames on / 4 off */
 .blink{animation:blinkoff var(--blink) infinite steps(1,end)}
 .nostrobe .strobe,.nostrobe .strobe-inv,.nostrobe .strobe-in{animation:none}

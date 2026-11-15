@@ -42,8 +42,8 @@ const SCENES=[
       <div class="cell"><small class="hx">Object</small><span class="cond">15th</span></div>
       <div class="cell"><small class="hx">Operator : none</small><span class="cond">Unit-02</span></div>
       <div class="cell"><small class="hx">Operator : K.Ross</small><span class="cond">Unit-01</span></div></div></div>
-   <div class="abs" style="left:15cqw;top:17cqw"><span class="cond glow" style="font-size:3.4cqw">Lower shaft · sector 9</span><br><span class="tall obl glow" style="font-size:14cqw">Barrier field</span></div>
-   <div class="abs" style="left:15cqw;top:36cqw;display:flex;align-items:flex-end;gap:2cqw"><span class="cond obl glow" style="font-size:4cqw">Generation</span><span class="tag dbl glow strobe" style="color:var(--red);font-size:7cqw">Detected</span></div>
+   <div class="abs" style="left:15cqw;top:17cqw"><span class="cond glow" style="font-size:3.4cqw">Lower shaft · sector 9</span><br><span class="tall glow" style="font-size:14cqw">Barrier field</span></div>
+   <div class="abs" style="left:15cqw;top:36cqw;display:flex;align-items:flex-end;gap:2cqw"><span class="cond glow" style="font-size:4cqw">Generation</span><span class="tag dbl glow strobe" style="color:var(--red);font-size:7cqw">Detected</span></div>
    <div class="abs mono" style="left:15cqw;bottom:2.5cqw;font-size:1.3cqw">ENERGY LEVEL: HIGHEST EVER RECORDED · VERIFIED TRIAD-1·2·3</div></div>`;
   const bL=el.querySelector('#bL'),bR=el.querySelector('#bR');const upd=()=>{bL.textContent=bin();bR.textContent=bin()};upd();c.every(AF,upd);
 }},
@@ -92,11 +92,11 @@ const SCENES=[
     +tab(262,140,'RESERVE CELL 2',AMB,24)+dot(760,140,AMB)+dot(1130,680,AMB)+rulerS(1180,700,380,AMB,6,true);
   el.innerHTML=`<div class="fill" style="background:#050404">${overlay(fr)}
    <div class="abs wedge" style="left:0;top:0;width:9%;height:100%;opacity:.85"></div>
-   <div class="abs" style="left:13%;top:5%;color:var(--amber);display:flex;align-items:baseline;gap:1.5cqw"><span class="mincho glow" style="font-size:3.4cqw">予備電源</span><span class="cond obl" style="font-size:2.2cqw">TIME TO DEPLETION :</span></div>
-   <div class="abs" style="right:3%;top:4%;text-align:right;color:var(--red)"><div class="mincho glow" style="font-size:5cqw;line-height:1">外部</div><div class="wide obl" data-o="r" style="font-size:2.4cqw;color:#fff">EXTERNAL</div></div>
+   <div class="abs" style="left:13%;top:5%;color:var(--amber);display:flex;align-items:baseline;gap:1.5cqw"><span class="mincho glow" style="font-size:3.4cqw">予備電源</span><span class="cond" style="font-size:2.2cqw">TIME TO DEPLETION :</span></div>
+   <div class="abs" style="right:3%;top:4%;text-align:right;color:var(--red)"><div class="mincho glow" style="font-size:5cqw;line-height:1">外部</div><div class="wide" data-o="r" style="font-size:2.4cqw;color:#fff">EXTERNAL</div></div>
    <div class="abs hazard" style="right:3%;bottom:4%;width:20%;height:3cqw;font-size:1.4cqw"></div>
    <div class="abs glow obl-seg" id="tm" style="left:14%;top:26%;color:#ff6a1a;font-size:17cqw;line-height:1"></div>
-   <div class="abs chain" style="left:15%;top:68%;color:#6f3a12;font-size:2.4cqw">${['HOLD','LOW','NOMINAL','OVERDRIVE'].map((m,i)=>`<div class="cell" style="${i==3?'background:var(--red);color:#000;border-color:var(--red)':''};padding:.3cqw 1.2cqw"><span class="cond obl">${m}</span></div>`).join('')}</div>
+   <div class="abs chain" style="left:15%;top:68%;color:#6f3a12;font-size:2.4cqw">${['HOLD','LOW','NOMINAL','OVERDRIVE'].map((m,i)=>`<div class="cell" style="${i==3?'background:var(--red);color:#000;border-color:var(--red)':''};padding:.3cqw 1.2cqw"><span class="cond">${m}</span></div>`).join('')}</div>
    <div class="abs tag strobe" style="left:13%;bottom:4%;color:var(--red);font-size:2.2cqw">DANGER · EMERGENCY</div></div>`;
   const tm=el.querySelector('#tm');const t0=performance.now();const start=59990;
   c.loop(t=>{const r=Math.max(0,start-(t-t0)*9);tm.innerHTML=seg7(`${pad(r/60000)}:${pad(r/1000%60)}:${pad(r/10%100)}`)},24);
@@ -172,7 +172,7 @@ const SCENES=[
     s+=`<g class="row" style="visibility:hidden">${box(x,y,BW,BH,'#000',0,'#000')}<g class="tk">${ticks}</g>${wire(`M${x+BW} ${y+BH/2} H${RAIL}`,'#000',3)}<rect x="${x+BW-4}" y="${y+BH/2-4}" width="8" height="8" fill="#000"/><rect x="${RAIL-8}" y="${y+BH/2-8}" width="16" height="16" fill="#000"/>${monoT(RAIL+22,y+BH/2+9,pad(223+i,5),26,'#000')}</g>`}
   s+=tagS(1560,30,'INDEX TRACE · CH 07',28,'#000',{anchor:'end',bg:'none'});
   [['SCAN','LINEAR'],['PITCH','56 U'],['DEPTH','12']].forEach(([k,v],i)=>{s+=box(1380,300+i*96,180,80,'#000',3)+svgT(1392,324+i*96,k,16,'#000','start',.84)+svgT(1392,366+i*96,v,36,'#000','start',.74)});
-  s+=svgTi('cnt',X0,860,'00223',250,'#000','start',.56,-12)+monoT(X0+4,640,'TRACE COUNT',22,'#000');
+  s+=svgTi('cnt',X0,860,'00223',250,'#000','start',.56)+monoT(X0+4,640,'TRACE COUNT',22,'#000');
   el.innerHTML=sv(s,'#d65f0e','',false);
   const rows=[...el.querySelectorAll('.row')],tks=rows.map(r=>[...r.querySelectorAll('.tk rect')]);const cur=Array(N).fill(0);let i=0,n=223;
   c.every(AF,()=>{for(let k=0;k<2&&i<N;k++)rows[i++].style.visibility='visible';
@@ -210,7 +210,7 @@ const SCENES=[
   el.innerHTML=`<div class="fill" style="background:#050000;display:flex;flex-direction:column">
      <div class="dump" style="flex:1;--dump-size:.95cqw;color:var(--red);opacity:.3;padding-top:.4cqw">${warn}</div>
      <div style="height:.35cqw;background:var(--amber);box-shadow:0 0 1cqw var(--amber)"></div>
-     <div style="padding:1.5cqw 0 0 0;margin-left:-3cqw;white-space:nowrap"><span class="wide obl glow strobe-in" style="color:var(--red);font-size:19cqw">KEEP OUT</span></div>
+     <div style="padding:1.5cqw 0 0 0;margin-left:-3cqw;white-space:nowrap"><span class="wide glow strobe-in" style="color:var(--red);font-size:19cqw">KEEP OUT</span></div>
      <div style="padding-left:5cqw;display:flex;align-items:baseline;gap:3cqw"><span class="mincho glow" style="color:var(--red);font-size:4.5cqw;line-height:1.3">立入禁止区域</span><span class="cond" style="color:var(--red);font-size:2.6cqw">LOWER SHAFT : LEVEL 1 · SECTOR 2</span></div>
      <div class="mono" style="color:var(--red);font-size:1.15cqw;padding:0 0 1.5cqw 5cqw;opacity:.8">TRESPASSERS ENTERING WITHOUT CLEARANCE WILL BE DETAINED. NO EXCEPTIONS. NO EXCEPTIONS.</div>
      <div style="height:.35cqw;background:var(--amber);box-shadow:0 0 1cqw var(--amber)"></div>
@@ -297,7 +297,7 @@ const SCENES=[
   let s=tagS(60,40,'MEMORY PURGE · SECTOR 7F',30,AMB)+`<g class="strobe">${tagS(1540,40,'PURGE IN PROGRESS',30,RED,{anchor:'end',solid:true})}</g>`;
   P.forEach(([x,y],p)=>{s+=chamfer(x-14,y-14,W+28,ROWS*RH+28,14,AMB,2.5)+tab(x+10,y-14,'BANK 0'+(p+1),AMB,20);
     for(let r=0;r<ROWS;r++)s+=`<g class="rw" data-p="${p}" data-r="${r}">${monoT(x,y+r*RH+17,dumpLine(r%3?1:0).slice(0,64),15,AMB)}</g>`});
-  s+=box(60,830,150,44,AMB,3,'#000')+svgT(135,862,'06:00 AM',28,AMB,'middle',.74)+monoT(240,862,'BLOCKS REMAINING',20,AMB)+svgTi('rem',470,864,'',32,RED,'start',.74,-12);
+  s+=box(60,830,150,44,AMB,3,'#000')+svgT(135,862,'06:00 AM',28,AMB,'middle',.74)+monoT(240,862,'BLOCKS REMAINING',20,AMB)+svgTi('rem',470,864,'',32,RED,'start',.74);
   el.innerHTML=sv(s);
   const rows=[...el.querySelectorAll('.rw')];let k=0;
   const del=g=>{if(g.dataset.d)return;g.dataset.d=1;const p=+g.dataset.p,r=+g.dataset.r,[x,y]=P[p];let h=`<rect x="${x}" y="${y+r*RH+2}" width="${W}" height="${RH-4}" fill="${RED}"/>`;for(let q=0;q<6;q++)h+=svgT(x+8+q*118,y+r*RH+17,'DELETED',15,'#000','start',.84);g.innerHTML=h};
@@ -307,7 +307,7 @@ const SCENES=[
   const RW=16,CW=14;const panels=[[80,190,'NODE-1',40],[700,250,'NODE-2',26],[1140,310,'NODE-3',20]];
   let s=chainS(60,30,[['CODE','378',140,'cd'],['FILE','NODE_SYS',220],['PRIORITY','AAA',160]],AMB,72)+mincT(1540,96,'決議',72,AMB,'end')+tagS(1540,120,'審議中',26,RED,{anchor:'end',cls:'strobe'});
   panels.forEach(([x,y,n,C],p)=>{s+=chamfer(x-12,y-12,C*CW+24,RW*CW+84,14,AMB,2.5);for(let j=0;j<RW;j++)for(let i=0;i<C;i++)s+=`<rect class="px${p}" x="${x+i*CW}" y="${y+j*CW}" width="${CW}" height="${CW}" fill="${RED}"/>`;
-    s+=svgT(x+C*CW/2,y+RW*CW/2+24,n,72,'#000','middle',.74,-12)+svgTi('st'+p,x,y+RW*CW+52,'HOLDING',28,AMB,'start',.84)});
+    s+=svgT(x+C*CW/2,y+RW*CW/2+24,n,72,'#000','middle',.74)+svgTi('st'+p,x,y+RW*CW+52,'HOLDING',28,AMB,'start',.84)});
   s+=wire('M652 300 H670 V360 H688',AMB)+wire('M1076 360 H1100 V420 H1128',AMB)+dot(652,300,AMB)+dot(1128,420,AMB);
   s+=svgT(380,600,'OVERRIDE SIGNAL',30,MNT,'middle',.84)+`<g id="spin" transform="translate(380,690)"><rect x="-150" y="-18" width="300" height="36" fill="${MNT}"/><rect x="-60" y="-50" width="120" height="100" fill="none" stroke="${MNT}" stroke-width="4"/></g>`;
   s+=chamfer(700,770,840,100,12,AMB,1.5)+`<g id="lg"></g>`;
@@ -349,7 +349,7 @@ const SCENES=[
   c.every(AF,()=>{t++;let done=0;T.forEach(([,delay,N],i)=>{const n=Math.max(0,(t-delay)*3);bars[i].forEach((b,k)=>b.style.visibility=k<n?'visible':'hidden');if(n>=N){done++;bars[i].forEach(b=>b.querySelectorAll('.sy').forEach(x=>x.setAttribute('fill',AMB)))}});el.querySelector('#bus').textContent=`SYNC BUS ${done}/3`});
 }},
 {name:'PSYCHOGRAPH (SCRIBBLE)',build(el,c){
-  let s=tagS(40,26,'NEURAL TRACE DISPLAY',30,AMB)+svgT(470,56,'PHASE 4',28,AMB,'start',.74)+svgT(470,92,'K.ROSS : UNIT-02 OPERATOR',32,AMB,'start',.74,-12);
+  let s=tagS(40,26,'NEURAL TRACE DISPLAY',30,AMB)+svgT(470,56,'PHASE 4',28,AMB,'start',.74)+svgT(470,92,'K.ROSS : UNIT-02 OPERATOR',32,AMB,'start',.74);
   for(let i=0;i<10;i++){const y=170+i*46;s+=svgT(60,y+8,'LINK A'+"'".repeat(i%3),20,AMB,'start',.84)+`<path d="M180 ${y} H${300+i*18} L700 640" fill="none" stroke="${AMB}" stroke-width="1.5" opacity=".8"/>`}
   s+=brkS(720,140,820,500,AMB,36,3)+`<polyline id="sc" fill="none" stroke="#f2e9a0" stroke-width="2"/>`;
   s+=`<g class="strobe">${box(1250,160,270,96,RED,3,'none')}${svgT(1385,200,'APPROACHING LIMITS',26,RED,'middle',.74)}${svgT(1385,242,'DANGER',34,RED,'middle',.74)}</g>`;
@@ -408,7 +408,7 @@ const SCENES=[
 }},
 {name:'SERVICE STATUS',set:'modern',build(el,c){
   const names=['AUTH','API GATEWAY','DATABASE','CDN EDGE','QUEUE','SEARCH','BILLING','MAIL RELAY'];
-  let s=svgTi('hdr',40,130,'ALL SYSTEMS OPERATIONAL',100,MNT,'start',.56,-12)+chainS(1150,40,[['REGION','APAC-2',170],['UPDATED','00:00:00',240,'upd']],AMB,72);
+  let s=svgTi('hdr',40,130,'ALL SYSTEMS OPERATIONAL',100,MNT,'start',.56)+chainS(1150,40,[['REGION','APAC-2',170],['UPDATED','00:00:00',240,'upd']],AMB,72);
   s+=monoT(640,182,'90 DAYS AGO',18,AMB)+monoT(1480,182,'TODAY',18,AMB,'end')+monoT(1560,182,'UPTIME',18,AMB,'end');
   names.forEach((n,i)=>{const y=196+i*80;s+=`<line x1="40" y1="${y+70}" x2="1560" y2="${y+70}" stroke="${AMB}" stroke-width="1" opacity=".3"/>`+svgT(40,y+46,n,34,AMB,'start',.74)+`<g id="st${i}"></g>`;
     for(let j=0;j<90;j++)s+=`<rect class="u${i}" x="${640+j*9.33}" y="${y+12}" width="7" height="46" fill="${MNT}"/>`;s+=monoT(1560,y+44,'99.98%',24,AMB,'end','pc'+i)});
@@ -423,7 +423,7 @@ const SCENES=[
     el.querySelector('#upd').textContent=`00:00:${pad(t*2)}`});
 }},
 {name:'MARKET TERMINAL',set:'modern',build(el,c){
-  let s=svgT(40,150,'KSTL',150,AMB,'start',.56,-12)+svgT(40,196,'KESTREL HYDRO INDUSTRIES · NSE',28,AMB,'start',.74)+`<g id="px"></g>`+svgTi('chg',1240,180,'',40,MNT,'end',.74);
+  let s=svgT(40,150,'KSTL',150,AMB,'start',.56)+svgT(40,196,'KESTREL HYDRO INDUSTRIES · NSE',28,AMB,'start',.74)+`<g id="px"></g>`+svgTi('chg',1240,180,'',40,MNT,'end',.74);
   s+=chamfer(40,230,1200,600,18,AMB,2.5)+gridS(60,250,1160,420,1160/40*5,84,AMB,.2)+tab(70,230,'1 MIN · CANDLE',AMB,22)+`<g id="cs"></g><g id="vol"></g>`+`<line x1="60" y1="690" x2="1220" y2="690" stroke="${AMB}" stroke-width="2"/>`+monoT(70,820,'VOLUME',18,AMB);
   s+=chamfer(1270,230,290,600,18,AMB,2.5)+tab(1295,230,'ORDER BOOK',AMB,22)+`<g id="ob"></g>`;
   const tick=['ORBT ▲1.20','HYDR ▼0.42','KSTL ▲2.31','VSTA ▲0.08','JNUS ▼3.10','ARGS ▲0.77','OSPR ▼0.19','TRIA ▲5.02'].join('   ·   ');
@@ -432,7 +432,7 @@ const SCENES=[
   const draw=()=>{const hi=Math.max(...cs.map(k=>k.h)),lo=Math.min(...cs.map(k=>k.l));const Y=v=>660-(v-lo)/(hi-lo||1)*390;let g='',vv='';
     cs.forEach((k,i)=>{const x=60+i*29;const up=k.c>=k.o;const col=up?MNT:RED;g+=`<line x1="${x+10}" y1="${Y(k.h)}" x2="${x+10}" y2="${Y(k.l)}" stroke="${col}" stroke-width="2"/><rect x="${x+2}" y="${Math.min(Y(k.o),Y(k.c))}" width="16" height="${Math.max(3,Math.abs(Y(k.o)-Y(k.c)))}" fill="${up?'#000':col}" stroke="${col}" stroke-width="2"/>`;vv+=`<rect x="${x+2}" y="${800-k.v*90}" width="16" height="${k.v*90}" fill="${col}" opacity=".6"/>`});
     el.querySelector('#cs').innerHTML=g;el.querySelector('#vol').innerHTML=vv;const last=cs[cs.length-1].c,first=cs[0].o;
-    el.querySelector('#px').innerHTML=seg(430,46,120,last.toFixed(2),last>=first?MNT:RED);const ch=el.querySelector('#chg');ch.textContent=`${last>=first?'▲':'▼'} ${(last-first).toFixed(2)} / ${((last-first)/first*100).toFixed(2)}%`;ch.setAttribute('fill',last>=first?MNT:RED);
+    el.querySelector('#px').innerHTML=seg(430,46,120,last.toFixed(2),last>=first?MNT:RED,true,-8);const ch=el.querySelector('#chg');ch.textContent=`${last>=first?'▲':'▼'} ${(last-first).toFixed(2)} / ${((last-first)/first*100).toFixed(2)}%`;ch.setAttribute('fill',last>=first?MNT:RED);
     let ob='';for(let i=0;i<7;i++){ob+=monoT(1290,290+i*34,(last+.05*(7-i)).toFixed(2),22,RED)+monoT(1540,290+i*34,String(R(100,9000)|0),22,RED,'end')}
     ob+=`<rect x="1286" y="${290+7*34-24}" width="258" height="34" fill="${AMB}"/>`+monoT(1415,290+7*34,last.toFixed(2)+' MID',22,'#000','middle');
     for(let i=0;i<7;i++){ob+=monoT(1290,290+(i+8)*34,(last-.05*(i+1)).toFixed(2),22,MNT)+monoT(1540,290+(i+8)*34,String(R(100,9000)|0),22,MNT,'end')}
@@ -466,16 +466,16 @@ const SCENES=[
   s+=`<g id="arrows">${ar}</g>`;
   const days=[['MON','晴',27,18],['TUE','曇',25,17],['WED','雨',21,16],['THU','雨',20,15],['FRI','曇',23,16],['SAT','晴',26,18],['SUN','雪',3,-2]];
   days.forEach(([d,k,hi,lo],i)=>{const x=40+i*217;s+=box(x,640,217,220,AMB,3,'#000')+svgT(x+16,680,d,30,AMB,'start',.84)+mincT(x+108,780,k,80,k==='雨'?SKY:k==='雪'?'#fff':AMB,'middle')+monoT(x+16,840,`${hi}° / ${lo}°`,26,AMB)});
-  s+=`<g class="strobe">${tagS(1560-12,652,'FROST WARNING',22,RED,{anchor:'end',solid:true})}</g>`;
+  s+=`<g class="strobe">${tagS(1559,604,'FROST WARNING',22,RED,{anchor:'end',solid:true})}</g>`;
   el.innerHTML=sv(s);
   const ars=[...el.querySelectorAll('.ar')];let t=0,temp=23;
   const draw=()=>{ars.forEach(a=>{const x=+a.dataset.x,y=+a.dataset.y;const ang=Math.round((Math.sin(x*.5+t*.3)+Math.cos(y*.7-t*.2))*2.2*4)/4*45;const mag=Math.abs(Math.sin(x*.4+y*.3+t*.2));const col=mag>.8?RED:mag>.45?AMB:PHO;
     a.setAttribute('transform',`translate(${761+x*82},${103+y*87}) rotate(${ang})`);a.setAttribute('stroke',col);a.setAttribute('fill',col)});
-    el.querySelector('#tmp').innerHTML=seg(40,96,200,pad(temp),AMB)};
+    el.querySelector('#tmp').innerHTML=seg(40,96,200,pad(temp),AMB,true,-8)};
   draw();c.every(AF*2,()=>{t++;if(t%4===0)temp+=pick([-1,0,1]);draw()});
 }},
 {name:'NOW PLAYING',set:'modern',build(el,c){
-  const B=32,SG=16;let s=svgT(40,150,'SIGNAL DECAY',150,AMB,'start',.56,-12)+svgT(40,200,'THE ORBITAL HYDROLOGISTS',36,AMB,'start',.74);
+  const B=32,SG=16;let s=svgT(40,150,'SIGNAL DECAY',150,AMB,'start',.56)+svgT(40,200,'THE ORBITAL HYDROLOGISTS',36,AMB,'start',.74);
   s+=chainS(40,226,[['TRACK','04/11',140],['FORMAT','DAT 48K',190],['BPM','172',120],['KEY','F# MIN',160]],AMB,70);
   s+=chamfer(40,320,1080,450,18,AMB,2.5)+tab(70,320,'SPECTRUM · 32 BAND',AMB,22);
   for(let b=0;b<B;b++)for(let k=0;k<SG;k++)s+=`<rect class="sp" data-b="${b}" data-k="${k}" x="${62+b*32.8}" y="${740-k*25}" width="27" height="20" fill="#120a06"/>`;
@@ -502,7 +502,7 @@ const SCENES=[
   s+=chamfer(1010,140,60,80,10,RED,4,'#000')+svgT(1040,192,'B',40,RED,'middle')+tagS(1040,236,'DEST',22,RED,{anchor:'middle'});
   s+=`<g id="me" class="blink">${diamond(0,0,36,'',MNT,MNT)}</g>`;
   s+=chamfer(1120,40,440,820,20,AMB,3)+chamfer(1150,80,380,300,14,AMB,2)+`<path d="M1250 330 V190 H1400" fill="none" stroke="${AMB}" stroke-width="26"/><polygon points="1450,190 1395,145 1395,235" fill="${AMB}"/>`;
-  s+=svgT(1150,450,'TURN RIGHT',70,AMB,'start',.56,-12)+svgT(1150,490,'ONTO KANAL ST.',30,AMB,'start',.8)+`<g id="dist"></g>`+svgT(1430,640,'KM',44,AMB,'start',.74);
+  s+=svgT(1150,450,'TURN RIGHT',70,AMB,'start',.56)+svgT(1150,490,'ONTO KANAL ST.',30,AMB,'start',.8)+`<g id="dist"></g>`+svgT(1430,640,'KM',44,AMB,'start',.74);
   s+=chainS(1150,690,[['ETA','14:32',180],['REMAIN','12 MIN',200]],AMB,74)+chainS(1150,770,[['UNIT','07',100],['OPERATOR','K.ROSS',280]],SKY,64);
   s+=rulerS(60,40,240,AMB,2,false)+monoT(60,30,'0       250 M     500 M',16,AMB);
   el.innerHTML=sv(s,'#000','',true);drawWires(el,c.every,8);
@@ -592,16 +592,16 @@ const SCENES=[
 {name:'AUTHENTICATE (2FA)',set:'modern',build(el,c){
   // not a modal: an off-centre terminal. Hero bleeds left, scanner sits right, the verdict is a full-width band.
   const wall=wallHTML('Authorization required',30,'3.2cqw','rgba(255,26,46,.12)','left:50%;padding:.6cqw;gap:.2cqw 1.6cqw');
-  let s=tagS(40,26,'TERMINAL 07 · LOWER SHAFT',24,AMB)+svgT(-24,300,'IDENTIFY',300,AMB,'start',.56,-12);
+  let s=tagS(40,26,'TERMINAL 07 · LOWER SHAFT',24,AMB)+svgT(-24,300,'IDENTIFY',300,AMB,'start',.56);
   s+=wire('M40 352 H900',AMB,3)+tab(60,352,'ONE-TIME CODE',AMB,22)+dot(900,352,AMB);
   for(let i=0;i<6;i++){const x=60+i*124,y=384+i*10;s+=box(x,y,104,128,AMB,3,'#000')+svgTi('d'+i,x+52,y+100,'',92,AMB,'middle',.8,-10)+wire(`M${x+52} ${y+128} V600`,AMB,2)+monoT(x+52,624,'D'+(i+1),18,AMB,'middle')}
-  s+=`<line x1="60" y1="600" x2="740" y2="600" stroke="${AMB}" stroke-width="2"/>`+svgTi('st',60,690,'AWAITING INPUT',40,AMB,'start',.74,-12);
+  s+=`<line x1="60" y1="600" x2="740" y2="600" stroke="${AMB}" stroke-width="2"/>`+svgTi('st',60,690,'AWAITING INPUT',40,AMB,'start',.74);
   // retina scanner
   s+=brkS(940,60,620,560,AMB,44,3)+monoT(964,100,'RETINA · PASS 2/3',22,AMB);
   for(let r of [60,110,170,230])s+=`<circle cx="1250" cy="350" r="${r}" fill="none" stroke="${AMB}" stroke-width="${r===60?3:1.2}" opacity="${r===60?1:.6}"/>`;
   s+=`<line x1="990" y1="350" x2="1510" y2="350" stroke="${AMB}" stroke-width="1" opacity=".6"/><line x1="1250" y1="90" x2="1250" y2="610" stroke="${AMB}" stroke-width="1" opacity=".6"/><g id="sw"><line x1="1250" y1="350" x2="1480" y2="350" stroke="${MNT}" stroke-width="4"/></g><g id="pts"></g>`;
   s+=chainS(940,640,[['OPERATOR','K.ROSS',300],['CLEARANCE','LEVEL 3',200],['TERM','07',120]],AMB,74);
-  s+=`<g id="deny" style="visibility:hidden"><rect x="0" y="738" width="1600" height="112" fill="${RED}"/><g class="strobe">${svgT(40,830,'ACCESS DENIED',112,'#000','start',.56,-12)}</g>${mincT(1560,826,'否認',96,'#000','end')}${monoT(40,884,'ATTEMPT 3/3 · LOCKOUT 00:05:00 · INCIDENT LOGGED',22,RED)}</g>`;
+  s+=`<g id="deny" style="visibility:hidden"><rect x="0" y="738" width="1600" height="112" fill="${RED}"/><g class="strobe">${svgT(40,830,'ACCESS DENIED',112,'#000','start',.56)}</g>${mincT(1560,826,'否認',96,'#000','end')}${monoT(40,884,'ATTEMPT 3/3 · LOCKOUT 00:05:00 · INCIDENT LOGGED',22,RED)}</g>`;
   el.innerHTML=`<div class="fill" style="background:#000;overflow:hidden">${wall}</div>`+sv(s,'transparent');
   let t=0;const st=el.querySelector('#st'),sw=el.querySelector('#sw'),pts=el.querySelector('#pts');
   c.every(AF,()=>{t++;sw.setAttribute('transform',`rotate(${t*30} 1250 350)`);
@@ -646,7 +646,7 @@ const SCENES=[
   c.every(AF,()=>{for(let k=0;k<2&&i<rs.length;k++)rs[i++].style.visibility='visible';
     nowH+=.002;rem=Math.max(0,rem-1);const x=XT(nowH);
     el.querySelector('#now').innerHTML=`<line x1="${x}" y1="${Y0-34}" x2="${x}" y2="${Y0+7*RH}" stroke="${A}" stroke-width="4"/>`+`<rect x="${x-62}" y="${Y0-64}" width="124" height="30" fill="${A}"/>`+svgT(x,Y0-42,'NOW 14:16',22,'#000','middle',.84)+`<rect x="${x-7}" y="${Y0+TODAY*RH+RH/2-7}" width="14" height="14" fill="#000" stroke="${A}" stroke-width="3"/>`;
-    el.querySelector('#nx').innerHTML=seg(956,746,110,`${pad(rem/3600)}:${pad(rem/60%60)}:${pad(rem%60)}`,A)});
+    el.querySelector('#nx').innerHTML=seg(956,746,110,`${pad(rem/3600)}:${pad(rem/60%60)}:${pad(rem%60)}`,A,true,-8)});
 }}
 
 ];

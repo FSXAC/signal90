@@ -1,6 +1,6 @@
 {
   "name": "SIGNAL/90",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "summary": "Cassette-futurism UI system: emissive type on a dead-black CRT, flat axis-aligned screens, stretched Helvetica, boxed labels, engineered ornament (frames, wires, cell chains), walls of text, and state changes that snap on the 12 fps anime-frame grid. Alarms strobe at 12 Hz with a dim afterimage.",
   "files": {
     "css": "signal90/signal90.css",
@@ -100,8 +100,8 @@
       },
       {
         "id": "M14",
-        "rule": "Use oblique (.obl / svgT sk=-12 / seg sk=-8 / .obl-seg) on 1–2 accents per screen: hero words, warnings, a value in a chain. Never on body data or mono.",
-        "check": "oblique present but sparse"
+        "rule": "Oblique is rare and belongs to 7-segment readouts: slant at most one hero seg readout per screen (.obl-seg / seg(...,ghost,-8)). Never slant titles, headings, warnings, labels, body data or mono. .obl exists for a rare one-off, not a habit.",
+        "check": "no slanted titles or words; at most one slanted 7-seg hero"
       }
     ],
     "never": [
@@ -208,9 +208,9 @@
       {
         "role": "oblique",
         "class": ".obl (with .tall/.cond/.wide/.hx), .obl-seg for seg7",
-        "svg": "svgT(...,sx,-12) / seg(...,ghost,-8)",
+        "svg": "seg(...,ghost,-8)",
         "skew": "-12deg (token --skew)",
-        "use": "Accents: hero words, warnings, a highlighted value. Phototype slanted on the stat camera."
+        "use": "7-segment hero readouts only (a slanted LCD). Titles and words stay upright."
       }
     ],
     "data_attr": "data-o=\"c\" or \"r\" on .tall/.cond/.wide/.hx sets the stretch origin (centre/right) for centred or right-aligned text.",
@@ -460,7 +460,7 @@
       "One hero per screen on top of texture (wall/dump/grid).",
       "Asymmetric frames: one cut corner, an open side, or a tab on a rail. Avoid four identical corners around a centred hero.",
       "Overlap past open frame edges or across bands only (M13).",
-      "Oblique accents, 1–2 per screen (M14).",
+      "Oblique only on one hero 7-seg readout, if any (M14).",
       "Ornament over containment: frames and brackets for engineering feel, not grouping."
     ],
     "patterns": {
@@ -475,16 +475,23 @@
   },
   "vfx": {
     "default_on": [
-      "rgb-split (R +2.2px / B −2.2px screen recombine)",
-      "glow (.glow / #sglow)"
+      "glow (.glow / #sglow) — dropped below 700 px stage width"
     ],
     "default_off_optional": [
+      "rgb-split (R/B offset ≈0.07% of stage width, ≈0.9 px at 1280 px; never below 700 px wide)",
       "scanlines",
       "grain (24 fps noise, 13%)",
       "flicker",
       "tear"
     ],
-    "note": "VFX are CRT/signal artefacts applied to the screen, never camera effects."
+    "note": "VFX are CRT/signal artefacts applied to the screen, never camera effects.",
+    "performance": [
+      "SVG filters (#sglow, #rgbsplit) are CPU-rendered in Safari and on phones; a whole-screen filter re-runs on every anime-frame update. Keep rgb-split off by default and drop both under 700 px.",
+      "Scenes are pictures: pointer-events:none and contain:strict on the screen element, so hover hit-testing and repaints stay inside it.",
+      "Promote strobing HTML text to a fixed layer (will-change:opacity, in the kit for .strobe-in and .wall>*). Adding and removing layers mid-shot re-rasterises scaleX text at a new sub-pixel offset and it jitters.",
+      "Pause screens that are off screen or in a hidden tab (IntersectionObserver + visibilitychange); kill the ctx() scope.",
+      "Long doc pages: content-visibility:auto on sections."
+    ]
   },
   "accessibility": [
     "Strobe/blink disabled under prefers-reduced-motion (built into signal90.css).",
@@ -607,7 +614,7 @@
     "Is all copy original (no references to real shows, brands or characters)?",
     "Is the composition asymmetric, with no modal-style centred panel?",
     "Do overlaps cross open edges or bands only?",
-    "Is oblique used as a sparse accent?"
+    "Is oblique limited to at most one 7-seg hero readout (no slanted titles)?"
   ],
   "sound": {
     "status": "documented only. Not implemented in the kit.",
