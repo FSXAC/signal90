@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIGNAL/90 Starter</title>
+<!-- 1. fonts + kit -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Shippori+Mincho+B1:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signal90.css">
+<style>
+  html,body{margin:0;background:var(--void);color:var(--amber)}
+  /* 2. a screen = 16:9 container, everything inside sized in cqw */
+  .screen{position:relative;width:min(100vw - 32px,1280px);margin:16px auto;aspect-ratio:16/9;overflow:hidden;container-type:inline-size;background:var(--void)}
+  .screen.ca{filter:url(#rgbsplit)}
+</style>
+</head>
+<body>
+<!-- 3. SVG filters: glow for SVG scenes, RGB split for the screen -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="sglow" x="-3%" y="-3%" width="106%" height="106%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="rgbsplit" x="-2%" y="0" width="104%" height="100%" color-interpolation-filters="sRGB">
+    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/><feOffset in="r" dx="2.2" result="r2"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/><feOffset in="b" dx="-2.2" result="b2"/>
+    <feBlend in="r2" in2="g" mode="screen" result="rg"/><feBlend in="rg" in2="b2" mode="screen"/>
+  </filter>
+</svg>
+
+<!-- Example A: HTML screen (tags, chain, 7-seg, strobe, wall) -->
+<div class="screen ca" id="a">
+  <div class="abs wall" style="inset:0;color:rgba(255,26,46,.12);gap:0 1.2cqw">REPLACE_WALL</div>
+  <div class="abs chain glow" style="left:2.5cqw;top:2.5cqw;font-size:2.2cqw">
+    <div class="cell"><small class="hx">Node</small><span class="cond">KESTREL-07</span></div>
+    <div class="cell"><small class="hx">Loop</small><span class="cond">03</span></div>
+    <div class="cell"><small class="hx">Mode</small><span class="cond">AUTO</span></div>
+  </div>
+  <span class="abs tag solid blink" style="right:2.5cqw;top:2.5cqw;color:var(--red);font-size:2cqw">● LIVE</span>
+  <div class="abs brk center" style="left:18%;top:24%;width:64%;height:56%;color:var(--amber);--l:2.4cqw;--w:.25cqw;background:var(--void)">
+    <span class="cond glow" data-o="c" style="font-size:2.8cqw">Seal pressure</span>
+    <div class="glow" id="kpi" style="font-size:13cqw;color:var(--mint);margin:1cqw 0"></div>
+    <span class="tag dbl glow strobe" style="color:var(--red);font-size:3cqw">Below limit</span>
+  </div>
+  <span class="abs mono" style="left:2.5cqw;bottom:2.5cqw;font-size:1.4cqw" id="tc"></span>
+</div>
+
+<!-- Example B: SVG screen (1600×900) with frames, tabs, wires, LED meter -->
+<div class="screen ca" id="b"></div>
+
+<script src="signal90.js"></script>
+<script>
+// A — fill the wall, tick the KPI on the anime frame
+document.querySelector('#a .wall').innerHTML=Array(60).fill('<span class="tall" style="font-size:4cqw;line-height:1">Pressure</span>').join('');
+const a=ctx();let v=98.2;
+a.every(AF,()=>{v=Math.max(90,v-R(0,.3));document.getElementById('kpi').innerHTML=seg7(v.toFixed(1));});
+const t0=performance.now();a.every(FR,()=>document.getElementById('tc').textContent=timecode(performance.now()-t0));
+
+// B — compose with the SVG kit
+let s=chamfer(20,20,1560,860,36,AMB,4)+chamfer(38,38,1524,824,26,AMB,1.5)+tab(80,20,'LOOP 3 · PUMPS',AMB,26);
+s+=chainS(80,80,[['UNIT','07',120],['FLOW','',220,'flow']],AMB,74);
+const N=8;for(let k=0;k<N;k++){const x=120+k*120;s+=chamfer(x,220,90,420,10,AMB,2);for(let j=0;j<14;j++)s+=`<rect class="led" data-k="${k}" data-j="${j}" x="${x+15}" y="${600-j*27}" width="60" height="21" fill="${DIMG}"/>`;s+=svgT(x+45,680,'P'+pad(k+1),26,AMB,'middle',.74)+wire(`M${x+45} 700 V760 H1100`,AMB,2)}
+s+=chamfer(1100,700,420,110,14,MNT,3)+svgT(1310,770,'MANIFOLD',44,MNT,'middle',.56)+dot(1100,760,AMB,7);
+s+=gridS(1120,220,400,420,40,42,AMB,.2)+`<path id="st" fill="none" stroke="${MNT}" stroke-width="4"/>`;
+document.getElementById('b').innerHTML=sv(s);
+const b=ctx();drawWires(document.getElementById('b'),b.every,6);
+const lv=Array(N).fill(0),hist=Array(10).fill(.5);
+b.every(AF,()=>{
+  lv.forEach((x,k)=>lv[k]=Math.max(1,Math.min(14,x+(R(-2,2.6)|0))));
+  document.querySelectorAll('#b .led').forEach(r=>{const k=+r.dataset.k,j=+r.dataset.j;r.setAttribute('fill',j<lv[k]?(j>11?RED:j>8?AMB:PHO):DIMG)});
+  hist.shift();hist.push(R(.2,.9));let d=`M1120 ${640-hist[0]*400}`;hist.forEach((h,i)=>{if(i)d+=` H${1120+i*40} V${640-h*400}`});document.getElementById('st').setAttribute('d',d+' H1520');
+  document.getElementById('flow').textContent=(R(410,430)|0)+' L/MIN';
+});
+
+// 4. always stretch after inserting type, after fonts load, and on resize
+stretchAll();document.fonts.ready.then(()=>stretchAll());addEventListener('resize',()=>stretchAll());
+</script>
+</body>
+</html>

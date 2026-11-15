@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIGNAL/90 Demo Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Shippori+Mincho+B1:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="signal90/signal90.css">
+<style>
+/* ---------- page chrome ---------- */
+.mast{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:28px 0 14px;border-bottom:1px solid var(--page-rule);flex-wrap:wrap}
+.mast h1{margin:0;font-size:clamp(48px,10vw,120px);color:var(--amber)}
+.mast h1 b{color:var(--red)}
+.mast .sub{color:var(--page-dim);font-size:13px;max-width:46ch}
+.mast .jp{font:800 22px var(--f-mincho);color:var(--red);border:2px solid var(--red);padding:0 .3em;margin-right:.5em}
+.stage-wrap{margin:18px 0 0}
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--void);overflow:hidden;container-type:inline-size;isolation:isolate;border:1px solid #1d1512}
+.scene{position:absolute;inset:0;overflow:hidden}
+.stage.ca .scene{filter:url(#rgbsplit)}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:20}
+.fx-scan{background:repeating-linear-gradient(180deg,transparent 0 1px,rgba(0,0,0,.38) 1px 3px);mix-blend-mode:multiply}
+.fx-vig{background:radial-gradient(120% 95% at 50% 50%,transparent 55%,rgba(0,0,0,.65) 100%)}
+.fx-grain{width:100%;height:100%;opacity:.13;mix-blend-mode:screen}
+.stage.flicker .scene{animation:flick 3.1s infinite steps(1)}
+@keyframes flick{0%{opacity:1}31%{opacity:.88}32%{opacity:1}67%{opacity:.93}68%{opacity:1}92%{opacity:.8}93%{opacity:1}}
+.stage.tear .scene{animation:tear 4.7s infinite steps(1)}
+@keyframes tear{0%,100%{transform:none}61%{transform:translateX(.6cqw)}62%{transform:translateX(-.4cqw)}63%{transform:none}}
+
+.controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--page-rule);font-size:12px;color:var(--page-dim)}
+.btn{font:12px var(--f-mono);background:transparent;color:var(--amber);border:1px solid var(--amber);padding:4px 10px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
+.btn:hover,.btn[aria-pressed=true]{background:var(--amber);color:var(--void)}
+.controls label{display:inline-flex;gap:5px;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:.05em}
+.controls input{accent-color:var(--red)}
+.controls select{font:12px var(--f-mono);background:var(--void);color:var(--amber);border:1px solid var(--amber);padding:3px 6px}
+.controls input[type=range]{width:110px}
+.sval{color:var(--amber);min-width:15ch;display:inline-block;font-variant-numeric:tabular-nums}
+.readout{margin-left:auto;color:var(--amber);white-space:nowrap}
+.ticks{display:flex;gap:2px;height:10px;margin:8px 0 0}
+.ticks i{flex:1;background:#2a1d18;cursor:pointer}
+.ticks i.on{background:var(--red);box-shadow:0 0 6px var(--red)}
+
+section{padding:56px 0 8px;border-bottom:1px solid var(--page-rule)}
+.sh{display:flex;gap:14px;align-items:baseline;margin:0 0 22px;flex-wrap:wrap}
+.sh .no{font-size:60px;color:var(--red)}
+.sh h2{margin:0;font-size:32px;color:var(--amber)}
+.sh .jp{font:800 18px var(--f-mincho);color:var(--page-dim)}
+.lede{max-width:72ch;color:#cbbfb5;margin:0 0 22px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.card{border:1px solid var(--page-rule);background:var(--void-2);padding:14px;position:relative;min-width:0}
+.card h3{margin:0 0 8px;font-size:20px;color:var(--amber)}
+.card p{margin:6px 0 0;font-size:13px;color:#b9ada3}
+code{color:var(--mint);font-size:12px}
+.stat{font-size:72px;color:var(--phosphor)}
+.statnote{font-size:13px;color:var(--page-dim);margin-top:6px}
+.sw{height:96px;display:flex;align-items:flex-end;padding:8px;font:12px var(--f-mono)}
+.sw span{background:rgba(0,0,0,.7);color:#fff;padding:1px 5px}
+.swatch-meta{font-size:12px;color:var(--page-dim);margin-top:6px}
+.swatch-meta b{color:var(--page-ink);font-weight:400}
+.spec{border-top:1px solid var(--page-rule);padding:14px 0;display:grid;grid-template-columns:170px 1fr;gap:16px;align-items:center}
+.spec .k{font-size:11px;color:var(--page-dim);text-transform:uppercase;letter-spacing:.06em}
+@media (max-width:640px){.spec{grid-template-columns:1fr}}
+.archive img{width:100%;display:block;border:1px solid var(--page-rule);cursor:zoom-in}
+.archive figcaption{font-size:11px;color:var(--page-dim);padding:4px 0 10px}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;cursor:zoom-out}
+.lightbox.on{display:flex}
+.lightbox img{max-width:100%;max-height:100%}
+footer{padding:30px 0 60px;color:var(--page-dim);font-size:12px}
+.warn{border-left:3px solid var(--red);padding:8px 12px;background:#1a0606;font-size:13px;color:#e6cfc8;margin-top:14px}
+
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="rgbsplit" x="-2%" y="0" width="104%" height="100%" color-interpolation-filters="sRGB">
+    <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+    <feOffset in="r" dx="2.2" dy="0" result="r2"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+    <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+    <feOffset in="b" dx="-2.2" dy="0" result="b2"/>
+    <feBlend in="r2" in2="g" mode="screen" result="rg"/>
+    <feBlend in="rg" in2="b2" mode="screen"/>
+  </filter>
+  <filter id="sglow" x="-3%" y="-3%" width="106%" height="106%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</svg>
+
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div style="margin-bottom:10px"><span class="jp">信号</span><span class="mono" style="color:var(--page-dim);font-size:12px">DESIGN SYSTEM // REV 0.4 // CASSETTE-FUTURISM</span></div>
+      <h1 class="tall glow">Signal<b>/</b>90</h1>
+    </div>
+    <p class="sub">Emissive type on a dead-black tube. Flat screens, boxed labels, stretched Helvetica, alarms that strobe on the anime frame. Studied from a 305-second, 608-cut supercut of late-90s anime command-center graphics. Everything below is original.</p>
+  </header>
+
+  <div class="stage-wrap">
+    <div class="stage ca" id="stage">
+      <div class="scene" id="scene"></div>
+      <canvas class="fx fx-grain" id="grain" width="320" height="180" style="display:none"></canvas>
+      <div class="fx fx-scan" id="fxscan" style="display:none"></div>
+      <div class="fx fx-vig"></div>
+    </div>
+    <div class="ticks" id="ticks"></div>
+    <div class="controls">
+      <button class="btn" id="play" aria-pressed="true">❚❚ Pause</button>
+      <button class="btn" id="prev">◀ Prev</button>
+      <button class="btn" id="next">Next ▶</button>
+      <label>Set <select id="set"><option value="all">All</option><option value="source">Source studies</option><option value="modern">Never evolved</option></select></label>
+      <label>Tempo <select id="tempo"><option value="breakcore">Breakcore (source)</option><option value="broadcast">Broadcast (2.5s)</option><option value="hold">Hold shot</option></select></label>
+      <label><input type="checkbox" id="o-strobe" checked> Alarm strobe</label>
+      <label title="Film frames (24 fps) each strobe state holds">Rate <input type="range" id="s-rate" min="1" max="12" step="1" value="1"> <span class="sval" id="v-rate"></span></label>
+      <label title="Opacity of the off state">Off level <input type="range" id="s-off" min="0" max="80" step="1" value="42"> <span class="sval" id="v-off"></span></label>
+      <button class="btn" id="s-reset" style="padding:2px 8px">Reset</button>
+      <label><input type="checkbox" id="o-scan"> Scanlines</label>
+      <label><input type="checkbox" id="o-grain"> Grain</label>
+      <label><input type="checkbox" id="o-ca" checked> RGB split</label>
+      <label><input type="checkbox" id="o-flick"> Flicker</label>
+      <label><input type="checkbox" id="o-tear"> Tear</label>
+      <span class="readout" id="readout">SHOT 01/17</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="sh"><span class="no tall">01</span><h2 class="cond">Source read</h2><span class="jp">解析</span></div>
+    <p class="lede">Scene detection on the 1080p60 source (ffmpeg <code>select=gt(scene,0.3)</code>), with one frame pulled from the middle of every shot longer than 350 ms.</p>
+    <div class="grid g4">
+      <div class="card"><div class="stat tall glow">608</div><div class="statnote">detected "cuts" in 304.9 s</div></div>
+      <div class="card"><div class="stat tall glow" style="color:var(--red)">51%</div><div class="statnote">are under 100 ms. These aren't cuts: they're <b>alarm strobes</b> inside a shot, flipping on single frames (tuned to 12 Hz)</div></div>
+      <div class="card"><div class="stat tall glow" style="color:var(--amber)">1.35s</div><div class="statnote">p90 shot length. Real shots run 0.5–1.4 s</div></div>
+      <div class="card"><div class="stat tall glow" style="color:var(--mint)">0°</div><div class="statnote">screen tilt in the system. The source tilts its camera; the UI it films is always flat</div></div>
+    </div>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="card"><h3 class="cond">What the UI does</h3><p>Nothing eases. Every change lands on the anime frame grid (12 drawings/s): blinks, cell flips, bar steps, counters. Critical states strobe at one frame on, one frame off.</p></div>
+      <div class="card"><h3 class="cond">What the type does</h3><p>One family, Helvetica Bold, stretched horizontally: squeezed tall to shout, a little narrow for labels, pulled wide for blunt warnings. Kanji stamps in a heavy Mincho. Terminal dumps in mono.</p></div>
+      <div class="card"><h3 class="cond">What the screen does</h3><p>A flat black field, axis-aligned, filling the frame like a monitor. One or two emissive hues per shot. Red means fault, mint means nominal, amber means data.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">02</span><h2 class="cond">Colour</h2><span class="jp">色彩</span></div>
+    <p class="lede">Colours are emissive: they light the black, they don't sit on white. Allow at most three signal hues in one shot.</p>
+    <div class="grid g4" id="swatches"></div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">03</span><h2 class="cond">Typography</h2><span class="jp">書体</span></div>
+    <p class="lede">One family, Helvetica Bold (Arimo as the web fallback), stretched with <code>transform: scaleX()</code> instead of picking condensed or extended cuts. That is how the source was made: phototype distorted on a stat camera. The <code>.hx</code> helper scales the glyphs and gives the lost width back with negative margins, so layout stays honest.</p>
+    <div id="typespec"></div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">04</span><h2 class="cond">Components</h2><span class="jp">部品</span></div>
+    <div class="grid g3" id="comps"></div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">05</span><h2 class="cond">Motion</h2><span class="jp">動作</span></div>
+    <p class="lede">Everything runs on the anime frame: <code>--af: 83.333ms</code> (24 fps drawn on twos). Animations use <code>steps()</code> and move in big jumps, so a state change is done within 2–6 anime frames. There is no camera: no tilt, no push, no parallax.</p>
+    <div class="grid g3" id="motion"></div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">06</span><h2 class="cond">VFX &amp; layout</h2><span class="jp">効果</span></div>
+    <div class="grid g2">
+      <div class="card"><h3 class="cond">VFX stack (top → bottom)</h3>
+        <p><code>vignette</code> radial, 0 → 65% black at the corners<br>
+        <code>scanlines</code> 1px clear / 2px 38% black, multiply<br>
+        <code>grain</code> 320×180 noise at 24 fps, screen, 13%<br>
+        <code>tear</code> a 1-frame horizontal signal offset every ~5 s<br>
+        <code>flicker</code> 1-frame brightness drops at 80–93%<br>
+        <code>rgb split</code> R +2.2px / B −2.2px, screen recombine<br>
+        <code>glow</code> text-shadow: 0.06em currentColor + 0.35em at 55%</p>
+        <p>These are tube and signal artefacts, not camera effects. Toggle each one on the reel.</p></div>
+      <div class="card"><h3 class="cond">Layout rules</h3>
+        <p><b>Flat screen.</b> Everything is axis-aligned at 0°. The frame is the monitor bezel. No perspective, rotation or camera moves.<br>
+        <b>Bands.</b> Stack full-width horizontal bands: hazard / kanji / display word / kanji / hazard.<br>
+        <b>Bleed.</b> Display words may run off the left or right edge; the crop is the point.<br>
+        <b>Corner tags.</b> Put object, live and magnification tags in the corners, inside a 2.5 cqw safe margin.<br>
+        <b>Crosshair field.</b> A regular lattice of + marks with drifting × markers on targets.<br>
+        <b>Rulers.</b> Signed tick scales (−5 … +5) along the edges.<br>
+        <b>Ornament over containment.</b> Boxes are drawn because they look engineered, not to group content. Use cut-corner double frames, dashed bays, corner brackets, label tabs sitting on rails, and diamond cells.<br>
+        <b>Wire it up.</b> Join related boxes with orthogonal connectors and dot terminals. Tie numbers to bars with leader lines.<br>
+        <b>Chain the data.</b> Butt labelled cells against each other (key over value) instead of spacing them out.<br>
+        <b>Walls of text.</b> Repeat one intimidating word until it becomes texture, or fill the field with dense dump text (hex, logs, binary) behind the hero. Edge columns of binary make good side rails.<br>
+        <b>One idea per shot.</b> Ornament and walls are the background. One hero word or one hero number sits on top.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><span class="no tall">07</span><h2 class="cond">Reference archive</h2><span class="jp">記録</span></div>
+    <p class="lede">The souvenir shelf: eight contact sheets (236 mid-shot frames, read left→right) and eight frame strips sampled across single shots. The files sit in <code>reference/</code>. Click to enlarge.</p>
+    <div class="grid g2 archive" id="archive"></div>
+  </section>
+  <footer>SIGNAL/90 rev 0.4 · reference frames are for private study only · all scene copy, names and emblems in the reel are original</footer>
+</div>
+<div class="lightbox" id="lb"><img alt=""></div>
+
+<script src="signal90/signal90.js"></script>
+<script src="scenes.js"></script>
+<script>
+
+/* ============================================================
+   SCENES — all flat, all original
+   ============================================================ */
+/* reel runner: hard cuts only */
+const sceneEl=$('#scene'),stage=$('#stage');
+let idx=0,playing=true,cutTimer=null;
+const ticks=$('#ticks');ticks.innerHTML=SCENES.map((s,i)=>`<i title="${s.name}" data-i="${i}"></i>`).join('');
+ticks.onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
+function show(i){if(S)S.kill();sceneEl.innerHTML='';S=ctx();SCENES[i].build(sceneEl,S);stretchAll(sceneEl);[...ticks.children].forEach((t,k)=>t.classList.toggle('on',k===i))}
+function shotLen(){const t=$('#tempo').value;if(t==='broadcast')return 2500;if(t==='hold')return 1e9;
+  // whole anime frames: mostly 6–13 (0.5–1.1 s), sometimes a 20-frame hold
+  return AF*(Math.random()<.15?20:6+Math.floor(R(0,8)))}
+let SET='all';const list=()=>SCENES.map((s,i)=>i).filter(i=>SET==='all'||(SCENES[i].set||'source')===SET);
+function step(d){const L=list();let p=L.indexOf(idx);if(p<0)p=d>0?-1:0;return L[(p+d+L.length)%L.length]}
+function schedule(){clearTimeout(cutTimer);if(playing)cutTimer=setTimeout(()=>go(step(1)),shotLen())}
+function go(i){idx=i;show(idx);$('#readout').textContent=`SHOT ${pad(idx+1)}/${SCENES.length} — ${SCENES[idx].set==='modern'?'NEVER EVOLVED // ':''}${SCENES[idx].name}`;schedule()}
+$('#play').onclick=()=>{playing=!playing;$('#play').setAttribute('aria-pressed',playing);$('#play').textContent=playing?'❚❚ Pause':'▶ Play';schedule()};
+$('#next').onclick=()=>go(step(1));
+$('#prev').onclick=()=>go(step(-1));
+$('#set').onchange=e=>{SET=e.target.value;go(list()[0])};
+$('#tempo').onchange=schedule;
+const tog=(id,fn)=>{$(id).onchange=e=>fn(e.target.checked)};
+tog('#o-strobe',v=>document.body.classList.toggle('nostrobe',!v));
+// strobe tuning: drives the CSS tokens, so the reel and every doc demo follow
+function tuneStrobe(){
+  const fr=+$('#s-rate').value, off=+$('#s-off').value/100, root=document.documentElement.style;
+  root.setProperty('--strobe-frames',fr);root.setProperty('--strobe-off',off);
+  const ms=fr*FR;$('#v-rate').textContent=`${fr} fr · ${Math.round(ms)} ms · ${(1000/(ms*2)).toFixed(1)} Hz`;
+  $('#v-off').textContent=off?`${Math.round(off*100)}% dim`:'hard off';
+}
+$('#s-rate').oninput=$('#s-off').oninput=tuneStrobe;
+$('#s-reset').onclick=()=>{$('#s-rate').value=1;$('#s-off').value=42;tuneStrobe()};
+tuneStrobe();
+tog('#o-scan',v=>$('#fxscan').style.display=v?'':'none');
+tog('#o-grain',v=>$('#grain').style.display=v?'':'none');
+tog('#o-ca',v=>stage.classList.toggle('ca',v));
+tog('#o-flick',v=>stage.classList.toggle('flicker',v));
+tog('#o-tear',v=>stage.classList.toggle('tear',v));
+(()=>{const cv=$('#grain'),g=cv.getContext('2d');const id=g.createImageData(cv.width,cv.height);
+  setInterval(()=>{if(cv.style.display==='none')return;const d=id.data;for(let i=0;i<d.length;i+=4){const v=Math.random()*255|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}g.putImageData(id,0,0)},FR)})();
+new IntersectionObserver(es=>{if(!es[0].isIntersecting){clearTimeout(cutTimer);if(S)S.kill()}else go(idx)}).observe(stage);
+
+/* ============================================================
+   docs
+   ============================================================ */
+const COLORS=[['--void','#050404','Void','Base field. Never pure #000.'],['--red','#ff1a2e','Signal Red','Fault, deny, danger. The only colour that strobes.'],['--red-deep','#7a0612','Red Deep','Behind kanji bands, alarm fields.'],['--amber','#ff8a1c','Amber','Neutral data: labels, rules, readouts.'],['--phosphor','#39ff6a','Phosphor','Wireframe, topo, terminal.'],['--mint','#7df5b4','Mint','Nominal / approve / filled cell.'],['--sky','#a8c8f2','Sky','Inert panels, the third voter.'],['--hazard','#ffd21a','Hazard','Stripe pairs only, never text.'],['--magenta','#ff2f8e','Magenta','Interference, wave overlays.'],['--violet','#6e3cff','Violet','Spectrum floor, deep scans.'],['--doc-blue','#2a2ed6','Doc Blue','Clearance cards, documents.'],['--paper','#e8ebe2','Paper','Inverse LCD screens (clocks).']];
+$('#swatches').innerHTML=COLORS.map(([v,h,n,u])=>`<div><div class="sw" style="background:${h};${h==='#050404'?'border:1px solid #2a201c':''}"><span>${n}</span></div><div class="swatch-meta"><b>${v}</b> ${h}<br>${u}</div></div>`).join('');
+
+$('#typespec').innerHTML=[
+ ['Tall · scaleX .56','Shout. One word, full bleed.',`<span class="tall glow" style="font-size:clamp(56px,10vw,130px);color:var(--red)">Emergency</span>`],
+ ['Cond · scaleX .74','Headings, panel names.',`<span class="cond glow" style="font-size:40px;color:var(--mint)">Triad system-1 · Vesta·2</span>`],
+ ['Regular · scaleX 1','Body lines on documents.',`<span class="hx glow" style="--sx:1;font-size:28px;color:var(--amber)">Report on signal discharge</span>`],
+ ['Wide · scaleX 1.18','Blunt warnings.',`<span class="wide glow" style="font-size:clamp(44px,7vw,92px);color:var(--amber)">Danger</span>`],
+ ['Label · scaleX .84','Inside every tag.',`<span class="tag glow" style="color:var(--amber);font-size:20px">Object: 15</span> <span class="tag dbl glow" style="color:var(--phosphor);font-size:20px;margin-left:14px">Sector-3</span> <span class="tag solid" style="color:var(--red);font-size:20px;margin-left:14px">● Rec</span>`],
+ ['Kanji stamp','Shippori Mincho B1 800, boxed.',`<span class="mincho glow" style="font-size:52px;color:var(--red);border:3px solid var(--red);padding:0 .2em;line-height:1.2">非常事態</span> <span class="mincho" style="font-size:52px;color:var(--amber);margin-left:12px">承認</span>`],
+ ['Data · mono','Share Tech Mono, terminal dumps only.',`<div class="mono glow" style="color:var(--amber);font-size:15px;line-height:1.35">FILE : TRIAD_SYS &nbsp; EXTENTION : 4096<br>EX_MODE : OFF &nbsp; PRIORITY : AAA</div>`],
+ ['Numerals','7-segment SVG, ghost segments at 8%.',`<span style="font-size:72px;color:#ff6a1a" class="glow" id="specseg"></span>`]
+].map(([k,m,s])=>`<div class="spec"><div><div class="k">${k}</div><div style="font-size:11px;color:#6b605a;margin-top:4px">${m}</div></div><div style="overflow:hidden">${s}</div></div>`).join('');
+setInterval(()=>{const d=new Date();$('#specseg').innerHTML=seg7(`${pad(d.getMinutes())}:${pad(d.getSeconds())}:${pad(d.getMilliseconds()/10)}`)},FR);
+
+const comps=[
+ ['Tag','<code>.tag</code> <code>.dbl</code> <code>.solid</code>. A hairline-boxed label with stretched text inside. Place it in a corner.',`<div style="display:flex;gap:10px;flex-wrap:wrap"><span class="tag glow" style="color:var(--amber);font-size:18px">Live</span><span class="tag dbl glow" style="color:var(--red);font-size:18px">Unknown</span><span class="tag solid" style="color:var(--mint);font-size:18px">Open</span></div>`],
+ ['Alarm (strobe)','<code>.strobe</code> on critical elements only: 1 anime frame on, 1 off. <code>.strobe-in</code> strobes 4 times, then holds.',`<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><span class="tag strobe" style="color:var(--red);font-size:20px">Alert</span><span class="wide strobe" style="color:var(--red);font-size:34px">Danger</span><span class="tag dbl strobe-inv" style="--a:var(--red);--b:#000;font-size:18px">Breach</span></div>`],
+ ['Hazard band','<code>.chev</code>: mirrored stripes meeting in a V at the centre line, with a kanji panel on top. <code>.down</code> flips it for the lower band. <code>.hazard</code> is the plain 45° stripe for edges.',`<div class="chev" style="height:46px;font-size:12px;display:flex;align-items:center;justify-content:center"><span class="mincho" style="color:var(--red);background:#000;border:2px solid var(--red);padding:0 .4em;font-size:20px;letter-spacing:.3em">非常事態</span></div><div class="chev down" style="height:22px;margin-top:6px;font-size:9px"></div><div class="hazard" style="height:14px;margin-top:10px;font-size:7px;--c1:var(--hazard)"></div>`],
+ ['Chamfer frame + brackets','Ornament, not containment: cut-corner double frames, <code>.brk</code> corner L-marks, label tabs sitting on the rule.',`<svg viewBox="0 0 300 100" style="width:100%;height:100px;color:var(--amber)">${chamfer(4,4,292,92,14,'currentColor',2)}${chamfer(12,12,276,76,9,'currentColor',.8)}<rect x="24" y="0" width="98" height="16" fill="#0d0a09"/>${svgT(30,13,'SUPPORT LINE',12,'currentColor')}</svg><div class="brk mono" style="color:var(--mint);padding:12px;margin-top:8px;font-size:12px;text-align:center">TARGET ACQUIRED</div>`],
+ ['Wires &amp; leaders','Orthogonal connectors join boxes, with a dot terminal at each end. Leader lines tie a number to its bar. Wires draw in over 6 anime frames.',`<svg id="cwire" viewBox="0 0 300 100" style="width:100%;height:100px"></svg>`],
+ ['Cell chain','<code>.chain &gt; .cell</code>: boxes that share a border, each with a small key over a big value. Reads like an equipment manifest.',`<div class="chain" style="color:var(--amber);font-size:24px"><div class="cell"><small class="hx">Object</small><span class="cond">15</span></div><div class="cell"><small class="hx">Op.</small><span class="cond">none</span></div><div class="cell"><span class="cond">Unit-02</span></div><div class="cell"><small class="hx">Op.</small><span class="cond">K.Ross</span></div></div>`],
+ ['Text wall','Repeat one intimidating word until it is texture (<code>.wall</code>), or pour dense dump text (<code>.dump</code>) under the hero. Density is the ornament.',`<div class="wall" id="cwall" style="height:46px;color:var(--red);font-size:20px;gap:0 12px"></div><div class="dump" id="cdump" style="--dump-size:8px;height:46px;color:var(--phosphor);margin-top:6px;opacity:.8"></div>`],
+ ['7-seg readout','<code>seg7("00:59:99")</code> returns an SVG. Hundredths update every film frame, so they skip digits.',`<div class="glow" style="font-size:54px;color:#ff6a1a" id="cseg"></div>`],
+ ['Stepped meter','Bars jump 16% per anime frame and stall at random. Fills in about 0.5 s.',`<div id="cmeter" style="display:flex;align-items:flex-end;gap:3px;height:90px"></div>`],
+ ['Cell field','Cells flip state in a noisy bottom-up sweep, 16 cells per anime frame.',`<svg id="chex" viewBox="0 0 220 90" style="width:100%;height:90px"></svg>`],
+ ['Triad vote','Three panels with 承認 / 否定 stamps. A denied stamp strobes. One panel flips every 3 anime frames.',`<div style="display:flex;gap:6px;height:74px" id="ctri"></div>`],
+ ['Crosshair lattice','A grid of + marks. The × marker jumps between targets instead of gliding.',`<div style="height:90px;position:relative;background:linear-gradient(#3a4f8f,#c9a4d8);overflow:hidden" id="cx"></div>`],
+ ['Ruler','Signed tick scales on the edges, labelled −5 … +5.',`<div style="color:var(--amber)"><div class="ruler"></div><div class="mono" style="display:flex;justify-content:space-between;font-size:11px;margin-top:4px"><span>-5</span><span>-3</span><span>-1</span><span>0</span><span>+1</span><span>+3</span><span>+5</span></div></div>`]];
+$('#comps').innerHTML=comps.map(([n,d,demo])=>`<div class="card"><h3 class="cond">${n}</h3><div style="margin:12px 0">${demo}</div><p>${d}</p></div>`).join('');
+(()=>{const A='var(--amber)',M='var(--mint)';const sv=$('#cwire');
+  sv.innerHTML=chamfer(4,8,84,44,8,A,2)+svgT(46,36,'NODE A',16,A,'middle')+chamfer(212,8,84,44,8,M,2)+svgT(254,36,'NODE B',16,M,'middle')
+   +wire('M88 30 H150 V22 H212',A,2)+dot(88,30,A,3.5)+dot(212,22,A,3.5)
+   +`<rect x="4" y="74" width="110" height="12" fill="${A}"/>`+wire('M114 80 H160',A,2)+`<rect x="160" y="76" width="8" height="8" fill="${A}"/>`+`<text x="174" y="85" fill="${A}" font-family="Share Tech Mono" font-size="13">00231</text>`;
+  const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=setInterval(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();setInterval(run,2600)})();
+(()=>{const w=$('#cwall');w.innerHTML=Array(14).fill('<span class="tall glow">Denied</span>').join('');const ws=[...w.children];
+  setInterval(()=>{ws.forEach(x=>x.classList.remove('strobe'));pick(ws).classList.add('strobe')},AF*2);
+  const d=$('#cdump');const b=Array.from({length:5},()=>dumpLine(1));setInterval(()=>{b.shift();b.push(dumpLine(pick([0,1])));d.textContent=b.join('\n')},AF)})();
+setInterval(()=>{const r=(Date.now()/10)%6000;$('#cseg').innerHTML=seg7(`${pad(r/6000)}:${pad(r/100%60)}:${pad(r%100)}`)},FR);
+(()=>{const m=$('#cmeter');const n=18;for(let i=0;i<n;i++)m.insertAdjacentHTML('beforeend','<div style="flex:1;background:linear-gradient(#7df5b4,#1d7a3e);height:0"></div>');const ds=[...m.children];let h=Array(n).fill(0),hold=0;
+  setInterval(()=>{let full=true;ds.forEach((d,i)=>{const t=Math.round((30+60*Math.abs(Math.sin(i*.5)))/16)*16;if(h[i]<t){full=false;if(Math.random()>.25)h[i]+=16}d.style.height=Math.min(h[i],100)+'%'});if(full&&++hold>18){hold=0;h=h.map(()=>0)}},AF)})();
+(()=>{const s=$('#chex');let p='';const cells=[];for(let y=0;y<6;y++)for(let x=0;x<22;x++){const cx=x*10+(y%2?5:0)+5,cy=y*14+8;let pts='';for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30);pts+=`${(cx+5.4*Math.cos(a)).toFixed(1)},${(cy+5.4*Math.sin(a)).toFixed(1)} `}p+=`<polygon points="${pts}" fill="var(--mint)"/>`;cells.push(cy)}
+  s.innerHTML=p;const ps=[...s.children];let ord=[],n=0,hold=0;const reset=()=>{ps.forEach(e=>e.setAttribute('fill','var(--mint)'));ord=cells.map((y,i)=>({i,k:-y+R(0,30)})).sort((a,b)=>a.k-b.k);n=0};reset();
+  setInterval(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ps[ord[n++].i].setAttribute('fill','var(--red)')}else if(++hold>18){hold=0;reset()}},AF)})();
+(()=>{const t=$('#ctri');['ARGUS·1','VESTA·2','JANUS·3'].forEach((n,i)=>t.insertAdjacentHTML('beforeend',`<div data-c="${i==1?'var(--sky)':'var(--mint)'}" style="flex:1;background:${i==1?'var(--sky)':'var(--mint)'};clip-path:polygon(0 0,100% 0,100% 75%,50% 100%,0 75%);padding:6px 8px;color:#063"><span class="cond" style="font-size:16px">${n}</span><div class="mincho st" style="font-size:20px">承認</div></div>`));const ps=[...t.children];
+  setInterval(()=>{const p=pick(ps);const ok=Math.random()>.5;p.style.background=ok?p.dataset.c:'var(--red)';const st=p.querySelector('.st');st.textContent=ok?'承認':'否定';st.classList.toggle('strobe',!ok);p.style.color=ok?'#063':'#fff'},AF*3)})();
+(()=>{const c=$('#cx');let h='';for(let y=1;y<4;y++)for(let x=1;x<8;x++)h+=`<span style="position:absolute;left:${x*12.5}%;top:${y*25}%;width:12px;height:12px;transform:translate(-50%,-50%);background:linear-gradient(#fff,#fff) 50% 0/1.5px 100% no-repeat,linear-gradient(#fff,#fff) 0 50%/100% 1.5px no-repeat"></span>`;h+=`<span id="cxm" class="mono" style="position:absolute;color:var(--red);font-size:20px;transform:translate(-50%,-50%)">×</span><span class="tag" style="position:absolute;left:6px;top:6px;color:#fff;font-size:11px">Object: 15</span>`;c.innerHTML=h;
+  setInterval(()=>{const m=$('#cxm');m.style.left=(12.5*(1+Math.floor(R(0,7))))+'%';m.style.top=(25*(1+Math.floor(R(0,3))))+'%'},AF*5)})();
+
+const motion=[
+ ['Hard cut','0 ms · shots of 6–13 anime frames','The only transition. No dissolves, slides or flash frames between shots.','cut'],
+ ['Alarm strobe','12 Hz · 42 ms on / 42 ms at 42% · --strobe-frames / --strobe-off','Flips every film frame. The off state drops to a dim afterimage instead of vanishing, like phosphor decay. Critical elements only: alerts, DANGER, UNKNOWN, denied votes. This is what the 309 sub-100 ms "cuts" really were.','strobe'],
+ ['Strobe-in','4 cycles ≈ 0.67 s, then hold','A critical word arriving: KEEP OUT, REFUSED, CLASSIFIED.','strobein'],
+ ['Blink','4 frames on / 4 off','Non-critical status: ANALYZING, REC. Slower, so it never competes with an alarm.','blink'],
+ ['Power-on','4 anime frames','Off → dim → on → dim → ON. A display word lights up in a third of a second.','flick'],
+ ['Wire draw','6 anime frames, linear steps','Connectors draw themselves in from the source terminal in visible jumps, then hold.','wire'],
+ ['Stochastic sweep','16 cells / anime frame','Cells flip state in position order plus random jitter.','sweep'],
+ ['Stepped growth','16% / anime frame','Meters jump in coarse steps with random stalls. No tweening.','step'],
+ ['Ticker','24 fps','Counters and timecodes change every film frame, the one thing faster than the anime grid.','tick'],
+ ['Marquee','linear, 1.3 s / word','A giant word crosses its band at constant speed. This is the screen scrolling, not a camera move.','marq']];
+$('#motion').innerHTML=motion.map(([n,t,d,k])=>`<div class="card"><h3 class="cond">${n}</h3><div class="mono" style="color:var(--mint);font-size:12px">${t}</div><div class="mdemo" data-k="${k}" style="height:70px;margin:10px 0;background:#000;position:relative;overflow:hidden"></div><p>${d}</p></div>`).join('');
+document.querySelectorAll('.mdemo').forEach(m=>{const k=m.dataset.k;
+  const restart=(sel,ms)=>setInterval(()=>{const e=m.querySelector(sel);e.style.animation='none';void e.offsetWidth;e.style.animation=''},ms);
+  if(k==='wire'){m.innerHTML=`<svg viewBox="0 0 300 70" style="width:100%;height:100%">${chamfer(8,18,60,34,6,'var(--amber)',2)}${chamfer(232,18,60,34,6,'var(--amber)',2)}${wire('M68 35 H120 V12 H180 V35 H232','var(--amber)',2)}</svg>`;const sv=m.firstChild;const run=()=>{let id;drawWires(sv,(ms,fn)=>{id=setInterval(fn,ms)});setTimeout(()=>clearInterval(id),AF*8)};run();setInterval(run,1800)}
+  if(k==='strobe')m.innerHTML=`<div class="fill center"><span class="tag strobe" style="color:var(--red);font-size:24px">Alert</span></div>`;
+  if(k==='strobein'){m.innerHTML=`<div class="fill center"><span class="wide glow strobe-in" data-o="c" style="color:var(--red);font-size:40px">Keep out</span></div>`;restart('.strobe-in',2000)}
+  if(k==='blink')m.innerHTML=`<div class="fill center"><span class="tag blink" style="color:var(--amber);font-size:20px">Analyzing</span></div>`;
+  if(k==='flick'){m.innerHTML=`<div class="fill center"><div class="flick-on"><span class="tall glow" style="color:var(--mint);font-size:60px">Oracle</span></div></div>`;restart('.flick-on',1500)}
+  if(k==='marq'){const w='<span class="tall glow" style="padding-right:24px">Emergency</span>';m.innerHTML=`<div class="fill" style="display:flex;align-items:center;overflow:hidden"><div class="marq" style="color:#ff5a1f;font-size:64px;animation:marq 2.6s linear infinite">${w}${w}${w}${w}</div></div>`}
+  if(k==='tick'){m.innerHTML=`<div class="fill center mono glow" style="color:var(--amber);font-size:26px"></div>`;const e=m.firstChild;const t0=performance.now();setInterval(()=>e.textContent=timecode(performance.now()-t0),FR)}
+  if(k==='cut'){const cs=['var(--red)','#000','var(--mint)','var(--doc-blue)'];let i=0;setInterval(()=>{m.style.background=cs[i++%4]},AF*9)}
+  if(k==='sweep'){m.innerHTML=`<div style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;padding:6px;height:100%">${Array(96).fill('<i style="background:var(--mint)"></i>').join('')}</div>`;const is=[...m.querySelectorAll('i')];let ord=[],n=0,hold=0;const rs=()=>{is.forEach(e=>e.style.background='var(--mint)');ord=is.map((e,i)=>({e,k:-Math.floor(i/24)*10+R(0,14)})).sort((a,b)=>a.k-b.k);n=0};rs();setInterval(()=>{if(n<ord.length){for(let j=0;j<16&&n<ord.length;j++)ord[n++].e.style.background='var(--red)'}else if(++hold>12){hold=0;rs()}},AF)}
+  if(k==='step'){m.innerHTML=`<div style="position:absolute;left:8px;right:8px;bottom:8px;height:16px;background:#1a110c"><div style="height:100%;width:0;background:var(--mint)"></div></div>`;const b=m.querySelector('div>div');let w=0,hold=0;setInterval(()=>{if(w<100){if(Math.random()>.25)w+=16}else if(++hold>10){hold=0;w=0}b.style.width=Math.min(w,100)+'%'},AF)}
+});
+
+const sheets=[1,2,3,4,5,6,7,8].map(n=>[`reference/contact-sheets/s_0${n}.jpg`,`Contact sheet ${n}/8 · shots ${(n-1)*30+1}–${Math.min(n*30,236)}`]);
+const strips=[[6,'EMERGENCY marquee: hard scroll + wrap'],[10,'DANGER: static hold, tags strobe'],[16,'Tag cluster (camera tilted in the source; flat in the system)'],[77,'Hex bundle: stochastic green→red sweep'],[84,'Topo → energy bars stepping up'],[138,'Power-on flicker'],[153,'KEEP OUT (camera push in the source; flat in the system)'],[195,'Report card: boxed words strobe']].map(([i,c])=>[`reference/motion-strips/st_${i}.jpg`,`Motion strip, shot ${i}: ${c}`]);
+$('#archive').innerHTML=[...sheets,...strips].map(([s,c])=>`<figure style="margin:0"><img loading="lazy" src="${s}" alt="${c}" onerror="archiveMissing(this)"><figcaption>${c}</figcaption></figure>`).join('');
+window.archiveMissing=img=>{img.closest('figure').remove();if(!document.querySelector('#archive figure'))document.querySelector('#archive').closest('section').remove()};
+$('#archive').onclick=e=>{if(e.target.tagName==='IMG'){$('#lb img').src=e.target.src;$('#lb').classList.add('on')}};
+$('#lb').onclick=()=>$('#lb').classList.remove('on');
+
+stretchAll();go(0);
+document.fonts.ready.then(()=>{stretchAll()});
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>stretchAll(),120)});
+</script>
+</body>
+</html>

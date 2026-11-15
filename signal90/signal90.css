@@ -1,0 +1,109 @@
+/* SIGNAL/90 design system: tokens + components. Rules: see signal90/guide.json */
+/* ============================================================
+   SIGNAL/90 — a cassette-futurism UI system  (rev 0.4)
+   ============================================================ */
+:root{
+  /* surfaces */
+  --void:#050404; --void-2:#0d0a09; --paper:#e8ebe2;
+  /* signal colours (emissive) */
+  --red:#ff1a2e; --red-deep:#7a0612; --amber:#ff8a1c; --phosphor:#39ff6a; --mint:#7df5b4;
+  --sky:#a8c8f2; --violet:#6e3cff; --magenta:#ff2f8e; --hazard:#ffd21a; --doc-blue:#2a2ed6;
+  --spectrum:linear-gradient(180deg,#ff1a2e 0%,#ff8a1c 22%,#ffd21a 40%,#39ff6a 62%,#2a7bff 82%,#6e3cff 100%);
+  /* type — one family, stretched horizontally */
+  --f-helv:"Helvetica Neue",Helvetica,Arimo,Arial,sans-serif;
+  --f-mono:"Share Tech Mono",ui-monospace,monospace;
+  --f-mincho:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  --sx-tall:.56;   /* shout: squeezed tall */
+  --sx-cond:.74;   /* headings, labels */
+  --sx-label:.84;  /* tags */
+  --sx-wide:1.18;  /* stretched wide */
+  /* motion — everything sits on the anime frame grid */
+  --frame:41.667ms;     /* 1 film frame @ 24fps */
+  --af:83.333ms;        /* 1 anime frame: drawings "on twos" = 12 per second */
+  --strobe-frames:1;              /* film frames per strobe state: 1 = 12 Hz (owner-tuned) */
+  --strobe:calc(var(--frame) * var(--strobe-frames) * 2);   /* full on+off cycle */
+  --strobe-off:.42;               /* opacity of the "off" state: a dim afterimage (owner-tuned) */
+  --blink:calc(var(--af) * 8);    /* non-critical blink: 4 on / 4 off */
+  --glow:0 0 .06em currentColor,0 0 .35em color-mix(in srgb,currentColor 55%,transparent);
+  --page-ink:#e9e0d6; --page-dim:#8d827a; --page-rule:#2a201c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--void);color:var(--page-ink)}
+body{font:15px/1.5 var(--f-mono);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 16px}
+
+/* ---------- stretched Helvetica ---------- */
+/* .hx scales glyphs horizontally; JS (stretchAll) gives back the space with negative margins */
+.hx,.tall,.cond,.wide{display:inline-block;width:max-content;font-family:var(--f-helv);font-weight:700;text-transform:uppercase;transform:scaleX(var(--sx,1));transform-origin:0 50%}
+.hx[data-o=c],.tall[data-o=c],.cond[data-o=c],.wide[data-o=c]{transform-origin:50% 50%}
+.hx[data-o=r],.tall[data-o=r],.cond[data-o=r],.wide[data-o=r]{transform-origin:100% 50%}
+.hx{--sx:var(--sx-label)}
+.tall{--sx:var(--sx-tall);line-height:.86;letter-spacing:-.01em}
+.cond{--sx:var(--sx-cond);line-height:.95}
+.wide{--sx:var(--sx-wide);line-height:.9;letter-spacing:-.02em}
+.mono{font-family:var(--f-mono);text-transform:uppercase}
+.mincho{font-family:var(--f-mincho);font-weight:800}
+.glow{text-shadow:var(--glow)}
+
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+.tag{display:inline-block;border:.12em solid currentColor;padding:.1em .3em .04em;font-family:var(--f-helv);font-weight:700;line-height:1;white-space:nowrap}
+.tag.solid{background:currentColor}
+.tag.solid span{color:var(--void)}
+.tag.dbl{outline:.08em solid currentColor;outline-offset:.14em}
+/* STROBE — critical only. Flips every anime frame: 1 on, 1 off. */
+.strobe{animation:strobe var(--strobe) infinite steps(1,end)}
+@keyframes strobe{50%{opacity:var(--strobe-off)}}
+@keyframes blinkoff{50%{visibility:hidden}}
+/* strobe-inv: swaps ink and field every anime frame (set --a ink, --b field) */
+.strobe-inv{animation:strobeinv var(--strobe) infinite steps(1,end)}
+@keyframes strobeinv{0%{color:var(--a);background:var(--b)}50%{color:var(--b);background:var(--a);opacity:calc(.5 + var(--strobe-off) / 2)}}
+/* strobe-in: 4 strobe cycles (≈0.67s), then holds on */
+.strobe-in{animation:strobe var(--strobe) 4 steps(1,end)}
+/* BLINK — non-critical status (ANALYZING, REC): 4 frames on / 4 off */
+.blink{animation:blinkoff var(--blink) infinite steps(1,end)}
+.nostrobe .strobe,.nostrobe .strobe-inv,.nostrobe .strobe-in{animation:none}
+@media (prefers-reduced-motion:reduce){.strobe,.strobe-inv,.strobe-in,.blink{animation:none!important}}
+/* power-on: 4 anime frames — off, dim, on, dim, ON */
+.flick-on{animation:flickon calc(var(--af) * 4) both steps(1,end)}
+@keyframes flickon{0%{opacity:0}25%{opacity:.4}50%{opacity:1}75%{opacity:.5}100%{opacity:1}}
+.hazard{background:repeating-linear-gradient(-45deg,var(--c1,var(--red)) 0 .9em,var(--c2,#000) .9em 1.8em)}
+/* chevron band: mirrored diagonal stripes meeting at the centre line (a V across the band) */
+.chev{position:relative;background:var(--c2,#2c0005);overflow:hidden}
+.chev::before,.chev::after{content:'';position:absolute;top:0;bottom:0;width:50%;
+  background:repeating-linear-gradient(-58deg,var(--c1,var(--red)) 0 .9em,transparent .9em 2em)}
+.chev::before{left:0}
+.chev::after{right:0;transform:scaleX(-1)}
+.chev.down{transform:scaleY(-1)}
+.chev>*{position:relative;z-index:1}
+/* ORNAMENT ---------------------------------------------------- */
+/* corner brackets: four L-marks drawn in currentColor */
+.brk{--l:1.1em;--w:2px;background:
+  linear-gradient(currentColor,currentColor) 0 0/var(--l) var(--w),linear-gradient(currentColor,currentColor) 0 0/var(--w) var(--l),
+  linear-gradient(currentColor,currentColor) 100% 0/var(--l) var(--w),linear-gradient(currentColor,currentColor) 100% 0/var(--w) var(--l),
+  linear-gradient(currentColor,currentColor) 0 100%/var(--l) var(--w),linear-gradient(currentColor,currentColor) 0 100%/var(--w) var(--l),
+  linear-gradient(currentColor,currentColor) 100% 100%/var(--l) var(--w),linear-gradient(currentColor,currentColor) 100% 100%/var(--w) var(--l);
+  background-repeat:no-repeat}
+/* cell chain: boxes sharing borders, small key over big value */
+.chain{display:flex;align-items:stretch}
+.chain>.cell{border:.1em solid currentColor;margin-left:-.1em;padding:.12em .3em .08em;display:flex;flex-direction:column;justify-content:flex-end;line-height:.9}
+.chain>.cell:first-child{margin-left:0}
+.chain small{font-size:.38em;line-height:1.1}
+/* wire: SVG connector that draws itself in anime-frame steps */
+svg .wire{fill:none;stroke-linecap:square}
+/* text walls */
+.wall{display:flex;flex-wrap:wrap;align-content:flex-start;overflow:hidden}
+.dump{font:var(--dump-size,.95cqw)/1.18 var(--f-mono);white-space:pre;overflow:hidden;text-transform:uppercase}
+.seg7{height:1em;width:auto;overflow:visible;vertical-align:baseline}
+.seg7 .off{opacity:.08}
+.ruler{background:repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 10px);height:.6em;opacity:.8}
+.abs{position:absolute}
+.fill{position:absolute;inset:0}
+.center{display:flex;align-items:center;justify-content:center;flex-direction:column}
+.boot pre{margin:0;padding:3cqw;font:1.35cqw/1.35 var(--f-mono);color:var(--amber);text-shadow:var(--glow);white-space:pre}
+.tc{font:1.6cqw var(--f-mono);color:#7d8a83;letter-spacing:.12em;opacity:.8}
+.marq{white-space:nowrap;display:flex;will-change:transform}
+@keyframes marq{to{transform:translateX(-50%)}}
+.wedge{background:var(--spectrum)}
